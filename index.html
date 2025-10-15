@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta property="og:title" content="Rousev's site where he posts random shit">
-    <meta property="og:description" content="apparently i can make it embed when the site link is said, if you're seeing this text, it worked">
-    <meta property="og:url" content="http://www.rousev.com/">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rousev's sideproject</title>
@@ -50,11 +46,11 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            transition: opacity 0.2s;
+            transition: color 0.3s ease;
         }
 
         .top-bar a:hover {
-            opacity: 0.7;
+            color: #3da5d9;
         }
 
         .top-bar svg {
@@ -77,13 +73,13 @@
         .welcome {
             font-size: 24px;
             margin-bottom: 40px;
-            line-height: 1.0;
+            line-height: 1.5;
             text-align: center;
             font-weight: 700;
         }
 
         .blog-post {
-            background: white;
+            background: #7ec8e3;
             padding: 30px;
             margin-bottom: 30px;
             border-radius: 8px;
@@ -96,7 +92,7 @@
         }
 
         .blog-post-content {
-            line-height: 1.2;
+            line-height: 1.8;
             white-space: pre-wrap;
             color: #444;
         }
@@ -125,10 +121,29 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .popup-overlay.show {
             display: flex;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .popup-overlay.hiding {
+            animation: fadeOut 0.3s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+            }
         }
 
         .popup {
@@ -140,21 +155,145 @@
             font-weight: 600;
             max-width: 400px;
             text-align: center;
+            transform: scale(0.7);
+            opacity: 0;
+        }
+
+        .popup-overlay.show .popup {
+            animation: popIn 0.3s ease forwards;
+        }
+
+        .popup-overlay.hiding .popup {
+            animation: popOut 0.3s ease forwards;
+        }
+
+        @keyframes popIn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes popOut {
+            to {
+                transform: scale(0.7);
+                opacity: 0;
+            }
         }
 
         .popup-close {
             margin-top: 20px;
             padding: 10px 20px;
-            background: #7ec8e3;
+            background: #3da5d9;
             color: white;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
+            transition: background 0.2s ease;
         }
 
         .popup-close:hover {
-            background: #5bb3d4;
+            background: #2b8ec4;
+        }
+
+        .add-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #3da5d9;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(61, 165, 217, 0.4);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .add-button.visible {
+            display: flex;
+            animation: slideUp 0.5s ease;
+        }
+
+        .add-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(61, 165, 217, 0.5);
+        }
+
+        .add-button svg {
+            width: 30px;
+            height: 30px;
+            fill: white;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .popup input, .popup textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .popup textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .popup input:focus, .popup textarea:focus {
+            outline: none;
+            border-color: #3da5d9;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .popup-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s ease;
+        }
+
+        .popup-button.primary {
+            background: #3da5d9;
+            color: white;
+        }
+
+        .popup-button.primary:hover {
+            background: #2b8ec4;
+        }
+
+        .popup-button.secondary {
+            background: #ddd;
+            color: #333;
+        }
+
+        .popup-button.secondary:hover {
+            background: #ccc;
         }
     </style>
 </head>
@@ -195,6 +334,12 @@
         </div>
     </div>
 
+    <div class="add-button" id="addButton" onclick="startSuggestion()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+    </div>
+
     <script>
         // Easter egg - schmeeg
         let typedKeys = '';
@@ -231,7 +376,14 @@
         }
 
         function closePopup() {
-            document.getElementById('popupOverlay').classList.remove('show');
+            const overlay = document.getElementById('popupOverlay');
+            overlay.classList.add('hiding');
+            overlay.classList.remove('show');
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                overlay.classList.remove('hiding');
+            }, 300);
         }
 
         // Close popup when clicking outside
@@ -244,22 +396,24 @@
         // Hide/show top bar on scroll
         let lastScroll = 0;
         const topBar = document.getElementById('topBar');
+        const addButton = document.getElementById('addButton');
 
         window.addEventListener('scroll', () => {
             const currentScroll = window.pageYOffset;
             
             if (currentScroll <= 0) {
                 topBar.classList.remove('hidden');
-                lastScroll = currentScroll;
-                return;
-            }
-            
-            if (currentScroll > lastScroll && currentScroll > 60) {
+            } else if (currentScroll > lastScroll) {
                 // Scrolling down
                 topBar.classList.add('hidden');
             } else if (currentScroll < lastScroll) {
                 // Scrolling up
                 topBar.classList.remove('hidden');
+            }
+            
+            // Show add button after scrolling down a bit
+            if (currentScroll > 200) {
+                addButton.classList.add('visible');
             }
             
             lastScroll = currentScroll;
@@ -368,6 +522,94 @@
 
         // Load posts on page load
         loadBlogPosts();
+
+        // Suggestion system
+        let suggestionData = {};
+
+        function startSuggestion() {
+            const overlay = document.getElementById('popupOverlay');
+            const popup = overlay.querySelector('.popup');
+            
+            popup.innerHTML = `
+                <div style="font-size: 18px; margin-bottom: 10px;">What's your name?</div>
+                <input type="text" id="suggestionName" placeholder="Enter your name">
+                <div class="popup-buttons">
+                    <button class="popup-button secondary" onclick="closePopup()">Cancel</button>
+                    <button class="popup-button primary" onclick="askForSuggestion()">Continue</button>
+                </div>
+            `;
+            
+            overlay.style.display = 'flex';
+            overlay.classList.add('show');
+            
+            setTimeout(() => {
+                document.getElementById('suggestionName').focus();
+            }, 100);
+        }
+
+        function askForSuggestion() {
+            const name = document.getElementById('suggestionName').value.trim();
+            if (!name) {
+                alert('Please enter your name');
+                return;
+            }
+            
+            suggestionData.name = name;
+            
+            const overlay = document.getElementById('popupOverlay');
+            const popup = overlay.querySelector('.popup');
+            
+            popup.innerHTML = `
+                <div style="font-size: 18px; margin-bottom: 10px;">What is your suggestion?</div>
+                <input type="text" id="suggestionTitle" placeholder="Title">
+                <textarea id="suggestionBody" placeholder="Describe your suggestion..."></textarea>
+                <div class="popup-buttons">
+                    <button class="popup-button secondary" onclick="closePopup()">Cancel</button>
+                    <button class="popup-button primary" onclick="submitSuggestion()">Submit</button>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                document.getElementById('suggestionTitle').focus();
+            }, 100);
+        }
+
+        async function submitSuggestion() {
+            const title = document.getElementById('suggestionTitle').value.trim();
+            const body = document.getElementById('suggestionBody').value.trim();
+            
+            if (!title || !body) {
+                alert('Please fill in both title and body');
+                return;
+            }
+            
+            // Get current date in DD.MM.YYYY format
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const dateStr = `/[${day}.${month}.${year}]/`;
+            
+            // Create file content
+            const content = `${title}\n${body}\n${dateStr}`;
+            
+            // Get suggestion number (this would need server-side logic in reality)
+            const suggestionNum = Math.floor(Math.random() * 10000);
+            const filename = `${suggestionData.name}_${suggestionNum}.txt`;
+            
+            // In a real implementation, this would send to a server
+            // For now, we'll just show a success message and log it
+            console.log('Suggestion saved:', filename, content);
+            
+            const overlay = document.getElementById('popupOverlay');
+            const popup = overlay.querySelector('.popup');
+            
+            popup.innerHTML = `
+                <div style="font-size: 18px;">Thank you for your suggestion!</div>
+                <div style="font-size: 14px; color: #666; margin-top: 10px;">Your suggestion has been submitted.</div>
+                <button class="popup-close" onclick="closePopup()">Close</button>
+            `;
+        }
     </script>
 </body>
 </html>
