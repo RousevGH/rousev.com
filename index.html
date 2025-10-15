@@ -347,35 +347,6 @@
         .popup-button.secondary:hover {
             background: #ccc;
         }
-
-        .fullscreen-popup {
-            max-width: 90vw;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 50px;
-            background-attachment: fixed;
-            background-image: linear-gradient(to bottom, #c8e6f5, #7ec8e3);
-        }
-
-        .fullscreen-popup h2 {
-            margin-bottom: 30px;
-            font-size: 32px;
-        }
-
-        .fullscreen-popup .blog-post-content {
-            font-size: 18px;
-            line-height: 1.6;
-        }
-
-        .fullscreen-popup .blog-post-date {
-            margin-top: 30px;
-            font-size: 16px;
-        }
-
-        .fullscreen-popup .pin-icon {
-            width: 36px;
-            height: 36px;
-        }
     </style>
 </head>
 <body>
@@ -410,8 +381,8 @@
 
     <div class="popup-overlay" id="popupOverlay">
         <div class="popup">
-            <button class="popup-close-x" onclick="closePopup()">×</button>
             <div id="popupText"></div>
+            <button class="popup-close" onclick="closePopup()">Close</button>
         </div>
     </div>
 
@@ -646,45 +617,8 @@
                 }
                 
                 postDiv.innerHTML = html;
-                postDiv.addEventListener('click', () => openPostFullscreen(title, content, date, post.pinned));
                 container.appendChild(postDiv);
             });
-        }
-
-        function openPostFullscreen(title, content, date, isPinned) {
-            const overlay = document.getElementById('popupOverlay');
-            const popup = overlay.querySelector('.popup');
-            popup.className = 'popup fullscreen-popup';
-            
-            let html = '<button class="popup-close-x" onclick="closePostFullscreen()">×</button>';
-            html += `<h2>${title}`;
-            if (isPinned) {
-                html += `<svg class="pin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M14,4v5c0,1.12,0.37,2.16,1,3H9c0.65-0.86,1-1.9,1-3V4H14 M17,2H7C6.45,2,6,2.45,6,3c0,0.55,0.45,1,1,1c0,0,0,0,0,0l1,0v5 c0,1.66-1.34,3-3,3v2h5.97v7l1,1l1-1v-7H19v-2c-1.66,0-3-1.34-3-3V3l1,0c0,0,0,0,0,0c0.55,0,1-0.45,1-1C18,2.45,17.55,2,17,2L17,2 z"/>
-                </svg>`;
-            }
-            html += `</h2>`;
-            html += `<div class="blog-post-content">${content}</div>`;
-            if (date) {
-                html += `<div class="blog-post-date">${date}</div>`;
-            }
-            
-            popup.innerHTML = html;
-            overlay.style.display = 'flex';
-            overlay.classList.add('show');
-        }
-
-        function closePostFullscreen() {
-            const overlay = document.getElementById('popupOverlay');
-            const popup = overlay.querySelector('.popup');
-            overlay.classList.add('hiding');
-            overlay.classList.remove('show');
-            
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                overlay.classList.remove('hiding');
-                popup.className = 'popup'; // Reset to default popup styling
-            }, 300);
         }
 
         // Load posts on page load
@@ -696,13 +630,12 @@
         function startSuggestion() {
             const overlay = document.getElementById('popupOverlay');
             const popup = overlay.querySelector('.popup');
-            popup.className = 'popup';
             
             popup.innerHTML = `
-                <button class="popup-close-x" onclick="closePopup()">×</button>
                 <div style="font-size: 18px; margin-bottom: 10px;">What's your name?</div>
                 <input type="text" id="suggestionName" placeholder="Enter your name">
                 <div class="popup-buttons">
+                    <button class="popup-button secondary" onclick="closePopup()">Cancel</button>
                     <button class="popup-button primary" onclick="askForSuggestion()">Continue</button>
                 </div>
             `;
@@ -728,11 +661,11 @@
             const popup = overlay.querySelector('.popup');
             
             popup.innerHTML = `
-                <button class="popup-close-x" onclick="closePopup()">×</button>
                 <div style="font-size: 18px; margin-bottom: 10px;">What is your suggestion?</div>
                 <input type="text" id="suggestionTitle" placeholder="Title">
                 <textarea id="suggestionBody" placeholder="Describe your suggestion..."></textarea>
                 <div class="popup-buttons">
+                    <button class="popup-button secondary" onclick="closePopup()">Cancel</button>
                     <button class="popup-button primary" onclick="submitSuggestion()">Submit</button>
                 </div>
             `;
@@ -773,12 +706,9 @@
             const popup = overlay.querySelector('.popup');
             
             popup.innerHTML = `
-                <button class="popup-close-x" onclick="closePopup()">×</button>
                 <div style="font-size: 18px;">Thank you for your suggestion!</div>
                 <div style="font-size: 14px; color: #666; margin-top: 10px;">Your suggestion has been submitted.</div>
-                <div class="popup-buttons">
-                    <button class="popup-button primary" onclick="closePopup()">Done</button>
-                </div>
+                <button class="popup-close" onclick="closePopup()">Close</button>
             `;
         }
     </script>
