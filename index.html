@@ -84,19 +84,40 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             position: relative;
-            overflow: hidden;
+            background-attachment: fixed;
+            background-image: linear-gradient(to bottom, #c8e6f5, #7ec8e3);
+            transition: transform 0.3s ease;
+            cursor: pointer;
         }
 
-        .blog-post::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, #c8e6f5, #7ec8e3);
-            z-index: -1;
-            border-radius: inherit;
+        .blog-post:hover {
+            transform: scale(1.02);
+        }
+
+        .blog-post.pinned {
+            border: 3px solid white;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 2px 4px rgba(0,0,0,0.1);
+            transform: scale(1.05);
+            margin-bottom: 40px;
+        }
+
+        .blog-post.pinned:hover {
+            transform: scale(1.1);
+        }
+
+        .pin-icon {
+            display: inline-block;
+            margin-left: 10px;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            transform: rotate(45deg);
+            color: #888;
+        }
+
+        .blog-post.pinned .pin-icon {
+            width: 28px;
+            height: 28px;
         }
 
         #blogPosts {
@@ -109,9 +130,12 @@
         }
 
         .blog-post-content {
-            line-height: 1.8;
+            line-height: 1.4;
             white-space: pre-wrap;
             color: #444;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
         }
 
         .blog-post-date {
@@ -236,6 +260,10 @@
             animation: slideUp 0.5s ease;
         }
 
+        .add-button.hiding {
+            animation: slideDown 0.3s ease forwards;
+        }
+
         .add-button:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 16px rgba(61, 165, 217, 0.5);
@@ -255,6 +283,13 @@
             to {
                 transform: translateY(0);
                 opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            to {
+                transform: translateY(100px);
+                opacity: 0;
             }
         }
 
@@ -312,6 +347,35 @@
         .popup-button.secondary:hover {
             background: #ccc;
         }
+
+        .fullscreen-popup {
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 50px;
+            background-attachment: fixed;
+            background-image: linear-gradient(to bottom, #c8e6f5, #7ec8e3);
+        }
+
+        .fullscreen-popup h2 {
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .fullscreen-popup .blog-post-content {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .fullscreen-popup .blog-post-date {
+            margin-top: 30px;
+            font-size: 16px;
+        }
+
+        .fullscreen-popup .pin-icon {
+            width: 36px;
+            height: 36px;
+        }
     </style>
 </head>
 <body>
@@ -346,8 +410,8 @@
 
     <div class="popup-overlay" id="popupOverlay">
         <div class="popup">
+            <button class="popup-close-x" onclick="closePopup()">×</button>
             <div id="popupText"></div>
-            <button class="popup-close" onclick="closePopup()">Close</button>
         </div>
     </div>
 
@@ -429,6 +493,13 @@
             
             if (currentScroll <= 0) {
                 topBar.classList.remove('hidden');
+                // Hide add button when at top and trying to scroll up
+                if (hasScrolled && addButton.classList.contains('visible')) {
+                    addButton.classList.add('hiding');
+                    setTimeout(() => {
+                        addButton.classList.remove('visible', 'hiding');
+                    }, 300);
+                }
             } else if (currentScroll > lastScroll) {
                 // Scrolling down
                 topBar.classList.add('hidden');
@@ -477,6 +548,18 @@
         async function loadBlogPosts() {
             const postsContainer = document.getElementById('blogPosts');
             const posts = [];
+            let pinnedPost = null;
+            
+            // Check for IMPORTANT.txt first
+            try {
+                const response = await fetch(`./posts/IMPORTANT.txt`);
+                if (response.ok) {
+                    const text = await response.text();
+                    pinnedPost = { content: text, pinned: true };
+                }
+            } catch (e) {
+                // File doesn't exist
+            }
             
             // Try to load Thing_1.txt through Thing_10.txt (adjust number as needed)
             for (let i = 1; i <= 10; i++) {
@@ -494,15 +577,32 @@
             // Sort by number
             posts.sort((a, b) => a.number - b.number);
 
-            if (posts.length === 0) {
-                postsContainer.innerHTML = '<div class="loading">No posts found. Create Thing_1.txt, Thing_2.txt, etc. in the ./posts directory.</div>';
+            if (posts.length === 0 && !pinnedPost) {
+                // Show example posts
+                const examplePosts = [
+                    { number: 0, content: 'EXAMPLE POST\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n/[15.10.2025]/', pinned: true, filename: 'IMPORTANT.txt' },
+                    { number: 1, content: 'EXAMPLE POST\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' },
+                    { number: 2, content: 'EXAMPLE POST\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' }
+                ];
+                
+                displayPosts(examplePosts, postsContainer);
                 return;
+            }
+
+            // Add pinned post to beginning if it exists
+            if (pinnedPost) {
+                posts.unshift({ number: -1, content: pinnedPost.content, pinned: true });
             }
 
             // Clear loading message
             postsContainer.innerHTML = '';
 
-            // Display posts
+            displayPosts(posts, postsContainer);
+        }
+
+        function displayPosts(posts, container) {
+            container.innerHTML = '';
+            
             posts.forEach(post => {
                 const lines = post.content.split('\n');
                 const title = lines[0];
@@ -529,16 +629,62 @@
 
                 const postDiv = document.createElement('div');
                 postDiv.className = 'blog-post';
+                if (post.pinned) {
+                    postDiv.classList.add('pinned');
+                }
                 
-                let html = `<h2>${title}</h2>`;
+                let html = `<h2>${title}`;
+                if (post.pinned) {
+                    html += `<svg class="pin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14,4v5c0,1.12,0.37,2.16,1,3H9c0.65-0.86,1-1.9,1-3V4H14 M17,2H7C6.45,2,6,2.45,6,3c0,0.55,0.45,1,1,1c0,0,0,0,0,0l1,0v5 c0,1.66-1.34,3-3,3v2h5.97v7l1,1l1-1v-7H19v-2c-1.66,0-3-1.34-3-3V3l1,0c0,0,0,0,0,0c0.55,0,1-0.45,1-1C18,2.45,17.55,2,17,2L17,2 z"/>
+                    </svg>`;
+                }
+                html += `</h2>`;
                 html += `<div class="blog-post-content">${content}</div>`;
                 if (date) {
                     html += `<div class="blog-post-date">${date}</div>`;
                 }
                 
                 postDiv.innerHTML = html;
-                postsContainer.appendChild(postDiv);
+                postDiv.addEventListener('click', () => openPostFullscreen(title, content, date, post.pinned));
+                container.appendChild(postDiv);
             });
+        }
+
+        function openPostFullscreen(title, content, date, isPinned) {
+            const overlay = document.getElementById('popupOverlay');
+            const popup = overlay.querySelector('.popup');
+            popup.className = 'popup fullscreen-popup';
+            
+            let html = '<button class="popup-close-x" onclick="closePostFullscreen()">×</button>';
+            html += `<h2>${title}`;
+            if (isPinned) {
+                html += `<svg class="pin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14,4v5c0,1.12,0.37,2.16,1,3H9c0.65-0.86,1-1.9,1-3V4H14 M17,2H7C6.45,2,6,2.45,6,3c0,0.55,0.45,1,1,1c0,0,0,0,0,0l1,0v5 c0,1.66-1.34,3-3,3v2h5.97v7l1,1l1-1v-7H19v-2c-1.66,0-3-1.34-3-3V3l1,0c0,0,0,0,0,0c0.55,0,1-0.45,1-1C18,2.45,17.55,2,17,2L17,2 z"/>
+                </svg>`;
+            }
+            html += `</h2>`;
+            html += `<div class="blog-post-content">${content}</div>`;
+            if (date) {
+                html += `<div class="blog-post-date">${date}</div>`;
+            }
+            
+            popup.innerHTML = html;
+            overlay.style.display = 'flex';
+            overlay.classList.add('show');
+        }
+
+        function closePostFullscreen() {
+            const overlay = document.getElementById('popupOverlay');
+            const popup = overlay.querySelector('.popup');
+            overlay.classList.add('hiding');
+            overlay.classList.remove('show');
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                overlay.classList.remove('hiding');
+                popup.className = 'popup'; // Reset to default popup styling
+            }, 300);
         }
 
         // Load posts on page load
@@ -550,12 +696,13 @@
         function startSuggestion() {
             const overlay = document.getElementById('popupOverlay');
             const popup = overlay.querySelector('.popup');
+            popup.className = 'popup';
             
             popup.innerHTML = `
+                <button class="popup-close-x" onclick="closePopup()">×</button>
                 <div style="font-size: 18px; margin-bottom: 10px;">What's your name?</div>
                 <input type="text" id="suggestionName" placeholder="Enter your name">
                 <div class="popup-buttons">
-                    <button class="popup-button secondary" onclick="closePopup()">Cancel</button>
                     <button class="popup-button primary" onclick="askForSuggestion()">Continue</button>
                 </div>
             `;
@@ -581,11 +728,11 @@
             const popup = overlay.querySelector('.popup');
             
             popup.innerHTML = `
+                <button class="popup-close-x" onclick="closePopup()">×</button>
                 <div style="font-size: 18px; margin-bottom: 10px;">What is your suggestion?</div>
                 <input type="text" id="suggestionTitle" placeholder="Title">
                 <textarea id="suggestionBody" placeholder="Describe your suggestion..."></textarea>
                 <div class="popup-buttons">
-                    <button class="popup-button secondary" onclick="closePopup()">Cancel</button>
                     <button class="popup-button primary" onclick="submitSuggestion()">Submit</button>
                 </div>
             `;
@@ -626,9 +773,12 @@
             const popup = overlay.querySelector('.popup');
             
             popup.innerHTML = `
+                <button class="popup-close-x" onclick="closePopup()">×</button>
                 <div style="font-size: 18px;">Thank you for your suggestion!</div>
                 <div style="font-size: 14px; color: #666; margin-top: 10px;">Your suggestion has been submitted.</div>
-                <button class="popup-close" onclick="closePopup()">Close</button>
+                <div class="popup-buttons">
+                    <button class="popup-button primary" onclick="closePopup()">Done</button>
+                </div>
             `;
         }
     </script>
