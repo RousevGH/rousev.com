@@ -11,15 +11,16 @@
             box-sizing: border-box;
         }
 
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(to bottom, #fafafa, #ececec);
+            background: linear-gradient(to bottom, #f8f8f8, #d8d8d8);
+            background-attachment: fixed;
             min-height: 100vh;
             color: #333;
             padding-top: 60px;
         }
-        
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
         .top-bar {
             position: fixed;
@@ -198,7 +199,7 @@
             // Try to load Thing_1.txt through Thing_10.txt (adjust number as needed)
             for (let i = 1; i <= 10; i++) {
                 try {
-                    const response = await fetch(`Thing_${i}.txt`);
+                    const response = await fetch(`./posts/Thing_${i}.txt`);
                     if (response.ok) {
                         const text = await response.text();
                         posts.push({ number: i, content: text });
@@ -212,7 +213,7 @@
             posts.sort((a, b) => a.number - b.number);
 
             if (posts.length === 0) {
-                postsContainer.innerHTML = '<div class="loading">No posts found. Create Thing_1.txt, Thing_2.txt, etc. in the same directory.</div>';
+                postsContainer.innerHTML = '<div class="loading">No posts found. Create Thing_1.txt, Thing_2.txt, etc. in the ./posts directory.</div>';
                 return;
             }
 
