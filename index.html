@@ -192,6 +192,24 @@
     </div>
 
     <script>
+        // Easter egg - schmeeg
+        let typedKeys = '';
+        let timeout;
+
+        document.addEventListener('keydown', function(e) {
+            clearTimeout(timeout);
+            typedKeys += e.key.toLowerCase();
+            
+            if (typedKeys.includes('schmeeg')) {
+                showPopup('schmeeg');
+                typedKeys = '';
+            }
+            
+            timeout = setTimeout(() => {
+                typedKeys = '';
+            }, 2000);
+        });
+
         // Popup functions
         function showPopup(type) {
             const overlay = document.getElementById('popupOverlay');
@@ -201,6 +219,8 @@
                 text.textContent = '@brousev on discord';
             } else if (type === 'email') {
                 text.textContent = 'contact@rousev.com';
+            } else if (type === 'schmeeg') {
+                text.textContent = 'http://schmeeg.rousev.com/';
             }
             
             overlay.classList.add('show');
@@ -224,9 +244,17 @@
         window.addEventListener('scroll', () => {
             const currentScroll = window.pageYOffset;
             
-            if (currentScroll > lastScroll && currentScroll > 80) {
+            if (currentScroll <= 0) {
+                topBar.classList.remove('hidden');
+                lastScroll = currentScroll;
+                return;
+            }
+            
+            if (currentScroll > lastScroll && currentScroll > 60) {
+                // Scrolling down
                 topBar.classList.add('hidden');
-            } else {
+            } else if (currentScroll < lastScroll) {
+                // Scrolling up
                 topBar.classList.remove('hidden');
             }
             
