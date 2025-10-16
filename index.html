@@ -170,33 +170,19 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0);
             z-index: 2000;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: background 0.3s ease;
         }
 
         .popup-overlay.show {
-            display: flex;
-            animation: fadeIn 0.3s ease forwards;
+            background: rgba(0, 0, 0, 0.5);
         }
 
         .popup-overlay.hiding {
-            animation: fadeOut 0.3s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeOut {
-            to {
-                opacity: 0;
-            }
+            background: rgba(0, 0, 0, 0);
         }
 
         .popup {
@@ -434,8 +420,7 @@
     </div>
 
     <div class="popup-overlay" id="popupOverlay">
-        <div class="popup" id="popupContent">
-        </div>
+        <div class="popup" id="popupContent"></div>
     </div>
 
     <div class="add-button" id="addButton" onclick="startSuggestion()">
