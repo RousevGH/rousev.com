@@ -1,0 +1,3 @@
+Some changes
+made some changes to make the site feel more polished, but do keep in mind this is a single file site so you shouldnt expect too much... well each post is its own separate file, but there is only one html file with no javascript or css or anything.
+/[16.10.2025]/
