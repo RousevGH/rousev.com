@@ -1,2 +1,2 @@
-This is a test pinned post
+This is a test pinned post #test-cathegory
 Ofc with body text
