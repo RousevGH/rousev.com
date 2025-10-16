@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rousev's sideproject</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
         * {
             margin: 0;
@@ -15,11 +15,13 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(to bottom, #f8f8f8, #d8d8d8);
+            background: linear-gradient(to bottom, #fafafa, #e8e8e8);
             background-attachment: fixed;
             min-height: 100vh;
-            color: #333;
+            color: #2c2c2c;
             padding-top: 60px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .top-bar {
@@ -27,8 +29,10 @@
             top: 0;
             left: 0;
             right: 0;
-            background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
             padding: 15px 30px;
             display: flex;
             align-items: center;
@@ -71,38 +75,42 @@
         }
 
         .welcome {
-            font-size: 24px;
-            margin-bottom: 40px;
-            line-height: 1.5;
+            font-size: 28px;
+            margin-bottom: 50px;
+            line-height: 1.6;
             text-align: center;
-            font-weight: 700;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: #1a1a1a;
         }
 
         .blog-post {
-            padding: 30px;
+            padding: 35px;
             margin-bottom: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
             position: relative;
             background-attachment: fixed;
             background-image: linear-gradient(to bottom, #c8e6f5, #7ec8e3);
-            transition: transform 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
         }
 
         .blog-post:hover {
-            transform: scale(1.02);
+            transform: scale(1.02) translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.08);
         }
 
         .blog-post.pinned {
-            border: 3px solid white;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 2px 4px rgba(0,0,0,0.1);
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 4px 12px rgba(0,0,0,0.15);
             transform: scale(1.05);
-            margin-bottom: 40px;
+            margin-bottom: 45px;
         }
 
         .blog-post.pinned:hover {
-            transform: scale(1.1);
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.7), 0 8px 20px rgba(0,0,0,0.2);
         }
 
         .pin-icon {
@@ -126,23 +134,27 @@
 
         .blog-post h2 {
             margin-bottom: 20px;
-            color: #222;
+            color: #1a1a1a;
+            font-weight: 600;
+            letter-spacing: -0.01em;
         }
 
         .blog-post-content {
-            line-height: 1.4;
+            line-height: 1.5;
             white-space: pre-wrap;
-            color: #444;
+            color: #3a3a3a;
             word-wrap: break-word;
             overflow-wrap: break-word;
             word-break: break-word;
+            font-weight: 400;
         }
 
         .blog-post-date {
             margin-top: 20px;
             font-size: 14px;
-            color: #888;
+            color: #666;
             font-style: italic;
+            font-weight: 400;
         }
 
         .loading {
@@ -242,16 +254,16 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            width: 60px;
-            height: 60px;
-            background: #3da5d9;
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #3da5d9 0%, #2b8ec4 100%);
             border-radius: 50%;
             display: none;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(61, 165, 217, 0.4);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(61, 165, 217, 0.35);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 999;
         }
 
@@ -265,8 +277,12 @@
         }
 
         .add-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(61, 165, 217, 0.5);
+            transform: scale(1.1) translateY(-2px);
+            box-shadow: 0 8px 24px rgba(61, 165, 217, 0.45);
+        }
+
+        .add-button:active {
+            transform: scale(1.05) translateY(-1px);
         }
 
         .add-button svg {
@@ -295,13 +311,14 @@
 
         .popup input, .popup textarea {
             width: 100%;
-            padding: 12px;
+            padding: 14px 16px;
             margin: 20px 0 10px 0;
-            border: 2px solid #ddd;
-            border-radius: 6px;
+            border: 2px solid #e5e5e5;
+            border-radius: 8px;
             font-size: 16px;
             font-family: inherit;
             box-sizing: border-box;
+            transition: all 0.2s ease;
         }
 
         .popup textarea {
@@ -312,6 +329,7 @@
         .popup input:focus, .popup textarea:focus {
             outline: none;
             border-color: #3da5d9;
+            box-shadow: 0 0 0 3px rgba(61, 165, 217, 0.1);
         }
 
         .popup-buttons {
@@ -322,21 +340,28 @@
         }
 
         .popup-button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
-            transition: background 0.2s ease;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
         }
 
         .popup-button.primary {
-            background: #3da5d9;
+            background: linear-gradient(135deg, #3da5d9 0%, #2b8ec4 100%);
             color: white;
+            box-shadow: 0 2px 8px rgba(61, 165, 217, 0.3);
         }
 
         .popup-button.primary:hover {
-            background: #2b8ec4;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(61, 165, 217, 0.4);
+        }
+
+        .popup-button.primary:active {
+            transform: translateY(0);
         }
 
         .popup-button.secondary {
@@ -346,6 +371,35 @@
 
         .popup-button.secondary:hover {
             background: #ccc;
+        }
+
+        .fullscreen-popup {
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 50px;
+            background-attachment: fixed;
+            background-image: linear-gradient(to bottom, #c8e6f5, #7ec8e3);
+        }
+
+        .fullscreen-popup h2 {
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .fullscreen-popup .blog-post-content {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .fullscreen-popup .blog-post-date {
+            margin-top: 30px;
+            font-size: 16px;
+        }
+
+        .fullscreen-popup .pin-icon {
+            width: 36px;
+            height: 36px;
         }
     </style>
 </head>
@@ -380,9 +434,7 @@
     </div>
 
     <div class="popup-overlay" id="popupOverlay">
-        <div class="popup">
-            <div id="popupText"></div>
-            <button class="popup-close" onclick="closePopup()">Close</button>
+        <div class="popup" id="popupContent">
         </div>
     </div>
 
@@ -617,8 +669,45 @@
                 }
                 
                 postDiv.innerHTML = html;
+                postDiv.addEventListener('click', () => openPostFullscreen(title, content, date, post.pinned));
                 container.appendChild(postDiv);
             });
+        }
+
+        function openPostFullscreen(title, content, date, isPinned) {
+            const overlay = document.getElementById('popupOverlay');
+            const popup = document.getElementById('popupContent');
+            popup.className = 'popup fullscreen-popup';
+            
+            let html = '<button class="popup-close-x" onclick="closePostFullscreen()">×</button>';
+            html += `<h2>${title}`;
+            if (isPinned) {
+                html += `<svg class="pin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14,4v5c0,1.12,0.37,2.16,1,3H9c0.65-0.86,1-1.9,1-3V4H14 M17,2H7C6.45,2,6,2.45,6,3c0,0.55,0.45,1,1,1c0,0,0,0,0,0l1,0v5 c0,1.66-1.34,3-3,3v2h5.97v7l1,1l1-1v-7H19v-2c-1.66,0-3-1.34-3-3V3l1,0c0,0,0,0,0,0c0.55,0,1-0.45,1-1C18,2.45,17.55,2,17,2L17,2 z"/>
+                </svg>`;
+            }
+            html += `</h2>`;
+            html += `<div class="blog-post-content">${content}</div>`;
+            if (date) {
+                html += `<div class="blog-post-date">${date}</div>`;
+            }
+            
+            popup.innerHTML = html;
+            overlay.style.display = 'flex';
+            overlay.classList.add('show');
+        }
+
+        function closePostFullscreen() {
+            const overlay = document.getElementById('popupOverlay');
+            const popup = overlay.querySelector('.popup');
+            overlay.classList.add('hiding');
+            overlay.classList.remove('show');
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                overlay.classList.remove('hiding');
+                popup.className = 'popup'; // Reset to default popup styling
+            }, 300);
         }
 
         // Load posts on page load
@@ -629,13 +718,14 @@
 
         function startSuggestion() {
             const overlay = document.getElementById('popupOverlay');
-            const popup = overlay.querySelector('.popup');
+            const popup = document.getElementById('popupContent');
+            popup.className = 'popup';
             
             popup.innerHTML = `
+                <button class="popup-close-x" onclick="closePopup()">×</button>
                 <div style="font-size: 18px; margin-bottom: 10px;">What's your name?</div>
                 <input type="text" id="suggestionName" placeholder="Enter your name">
                 <div class="popup-buttons">
-                    <button class="popup-button secondary" onclick="closePopup()">Cancel</button>
                     <button class="popup-button primary" onclick="askForSuggestion()">Continue</button>
                 </div>
             `;
@@ -658,14 +748,14 @@
             suggestionData.name = name;
             
             const overlay = document.getElementById('popupOverlay');
-            const popup = overlay.querySelector('.popup');
+            const popup = document.getElementById('popupContent');
             
             popup.innerHTML = `
+                <button class="popup-close-x" onclick="closePopup()">×</button>
                 <div style="font-size: 18px; margin-bottom: 10px;">What is your suggestion?</div>
                 <input type="text" id="suggestionTitle" placeholder="Title">
                 <textarea id="suggestionBody" placeholder="Describe your suggestion..."></textarea>
                 <div class="popup-buttons">
-                    <button class="popup-button secondary" onclick="closePopup()">Cancel</button>
                     <button class="popup-button primary" onclick="submitSuggestion()">Submit</button>
                 </div>
             `;
@@ -703,12 +793,15 @@
             console.log('Suggestion saved:', filename, content);
             
             const overlay = document.getElementById('popupOverlay');
-            const popup = overlay.querySelector('.popup');
+            const popup = document.getElementById('popupContent');
             
             popup.innerHTML = `
+                <button class="popup-close-x" onclick="closePopup()">×</button>
                 <div style="font-size: 18px;">Thank you for your suggestion!</div>
                 <div style="font-size: 14px; color: #666; margin-top: 10px;">Your suggestion has been submitted.</div>
-                <button class="popup-close" onclick="closePopup()">Close</button>
+                <div class="popup-buttons">
+                    <button class="popup-button primary" onclick="closePopup()">Done</button>
+                </div>
             `;
         }
     </script>
