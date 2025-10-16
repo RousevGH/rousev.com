@@ -679,7 +679,7 @@
             const popup = document.getElementById('popupContent');
             popup.className = 'popup fullscreen-popup';
             
-            let html = '<button class="popup-close-x" onclick="closePostFullscreen()">×</button>';
+            let html = '<button onclick="closePopup()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 28px; color: #000; opacity: 0.5; cursor: pointer; padding: 5px; font-family: Arial; font-weight: 300; line-height: 1;">×</button>';
             html += `<h2>${title}`;
             if (isPinned) {
                 html += `<svg class="pin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -722,7 +722,7 @@
             popup.className = 'popup';
             
             popup.innerHTML = `
-                <button class="popup-close-x" onclick="closePopup()">×</button>
+                <button onclick="closePopup()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 28px; color: #000; opacity: 0.5; cursor: pointer; padding: 5px; font-family: Arial; font-weight: 300; line-height: 1;">×</button>
                 <div style="font-size: 18px; margin-bottom: 10px;">What's your name?</div>
                 <input type="text" id="suggestionName" placeholder="Enter your name">
                 <div class="popup-buttons">
@@ -751,7 +751,7 @@
             const popup = document.getElementById('popupContent');
             
             popup.innerHTML = `
-                <button class="popup-close-x" onclick="closePopup()">×</button>
+                <button onclick="closePopup()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 28px; color: #000; opacity: 0.5; cursor: pointer; padding: 5px; font-family: Arial; font-weight: 300; line-height: 1;">×</button>
                 <div style="font-size: 18px; margin-bottom: 10px;">What is your suggestion?</div>
                 <input type="text" id="suggestionTitle" placeholder="Title">
                 <textarea id="suggestionBody" placeholder="Describe your suggestion..."></textarea>
@@ -796,7 +796,7 @@
             const popup = document.getElementById('popupContent');
             
             popup.innerHTML = `
-                <button class="popup-close-x" onclick="closePopup()">×</button>
+                <button onclick="closePopup()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 28px; color: #000; opacity: 0.5; cursor: pointer; padding: 5px; font-family: Arial; font-weight: 300; line-height: 1;">×</button>
                 <div style="font-size: 18px;">Thank you for your suggestion!</div>
                 <div style="font-size: 14px; color: #666; margin-top: 10px;">Your suggestion has been submitted.</div>
                 <div class="popup-buttons">
