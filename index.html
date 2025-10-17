@@ -325,17 +325,20 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0);
             z-index: 2000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: background 0.3s ease;
         }
 
         .modal.show {
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 1;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.hiding {
+            background: rgba(0, 0, 0, 0);
         }
 
         .modal-content {
@@ -349,12 +352,19 @@
             max-width: 400px;
             text-align: center;
             position: relative;
-            transform: scale(0.8);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .modal.show .modal-content {
             transform: scale(1);
+            opacity: 1;
+        }
+
+        .modal.hiding .modal-content {
+            transform: scale(0.7);
+            opacity: 0;
         }
 
         .modal-close {
@@ -580,11 +590,17 @@
             }
             
             modalContent.innerHTML = '<button class="modal-close" onclick="closeModal()">×</button><div>' + content + '</div>';
-            modal.classList.add('show');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('show'), 10);
         }
 
         function closeModal() {
+            modal.classList.add('hiding');
             modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                modal.classList.remove('hiding');
+            }, 300);
         }
 
         modal.addEventListener('click', function(e) {
@@ -704,10 +720,11 @@
 
         // Extract tags from title
         function extractTags(title) {
-            const tagMatches = title.match(/#[\w]+/g);
+            const tagMatches = title.match(/\/\#[^\/]+\//g);
             if (tagMatches) {
-                const cleanTitle = title.replace(/#[\w]+/g, '').trim();
-                return { title: cleanTitle, tags: tagMatches };
+                const tags = tagMatches.map(tag => tag.slice(2, -1)); // Remove /# and /
+                const cleanTitle = title.replace(/\/\#[^\/]+\//g, '').trim();
+                return { title: cleanTitle, tags: tags };
             }
             return { title, tags: [] };
         }
@@ -718,6 +735,7 @@
             const posts = [];
             let pinnedPost = null;
             
+            // Check for IMPORTANT.txt
             try {
                 const response = await fetch(`./posts/IMPORTANT.txt`);
                 if (response.ok) {
@@ -725,13 +743,18 @@
                 }
             } catch (e) {}
             
-            for (let i = 1; i <= 10; i++) {
+            // Load Thing_N.txt files until we hit a 404
+            let i = 1;
+            while (true) {
                 try {
                     const response = await fetch(`./posts/Thing_${i}.txt`);
-                    if (response.ok) {
-                        posts.push({ number: i, content: await response.text() });
-                    }
-                } catch (e) {}
+                    if (!response.ok) break; // Stop when file not found
+                    const content = await response.text();
+                    posts.push({ number: i, content });
+                    i++;
+                } catch (e) {
+                    break; // Stop on network error
+                }
             }
 
             posts.sort((a, b) => a.number - b.number);
@@ -836,7 +859,8 @@
             html += '</div>';
             
             modalContent.innerHTML = html;
-            modal.classList.add('show');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('show'), 10);
         }
 
         // Suggestion system
@@ -852,8 +876,11 @@
                     <button class="modal-button" onclick="askForSuggestion()">Continue</button>
                 </div>
             `;
-            modal.classList.add('show');
-            setTimeout(() => document.getElementById('suggestionName').focus(), 100);
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('show');
+                document.getElementById('suggestionName').focus();
+            }, 10);
         }
 
         function askForSuggestion() {
@@ -896,12 +923,20 @@
             const suggestionNum = Math.floor(Math.random() * 10000);
             const filename = `${suggestionData.name}_${suggestionNum}.txt`;
             
-            console.log('Suggestion saved:', filename, content);
+            // Create a downloadable file
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
             
             modalContent.innerHTML = `
                 <button class="modal-close" onclick="closeModal()">×</button>
                 <div style="font-size: 18px;">Thank you for your suggestion!</div>
-                <div style="font-size: 14px; color: #666; margin-top: 10px;">Your suggestion has been submitted.</div>
+                <div style="font-size: 14px; color: #666; margin-top: 10px;">Your suggestion has been downloaded as ${filename}</div>
+                <div style="font-size: 13px; color: #999; margin-top: 10px;">Upload it to ./suggestions/ folder on the server</div>
                 <div class="modal-buttons">
                     <button class="modal-button" onclick="closeModal()">Done</button>
                 </div>
