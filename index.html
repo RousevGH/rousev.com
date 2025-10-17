@@ -611,6 +611,7 @@
         // ESC to close modal
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && modal.classList.contains('show')) {
+                e.preventDefault();
                 closeModal();
             }
         });
@@ -619,6 +620,9 @@
         let keys = '';
         let timeout;
         document.addEventListener('keydown', function(e) {
+            // Don't trigger easter egg when typing in inputs
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
             clearTimeout(timeout);
             keys += e.key.toLowerCase();
             if (keys.includes('schmeeg')) {
@@ -690,9 +694,20 @@
 
         // Process content for links and images
         function processContent(text) {
+            // Escape HTML to prevent XSS
+            const escapeHtml = (str) => {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            };
+            
             // Process images: [$//image:path//] or [$//url:url//]
-            text = text.replace(/\[\$\/\/image:(.*?)\/\/\]/g, '<img src="$1" class="inline-image" alt="">');
-            text = text.replace(/\[\$\/\/url:(.*?)\/\/\]/g, '<img src="$1" class="inline-image" alt="">');
+            text = text.replace(/\[\$\/\/image:(.*?)\/\/\]/g, function(match, path) {
+                return '<img src="' + escapeHtml(path) + '" class="inline-image" alt="">';
+            });
+            text = text.replace(/\[\$\/\/url:(.*?)\/\/\]/g, function(match, url) {
+                return '<img src="' + escapeHtml(url) + '" class="inline-image" alt="">';
+            });
             
             // Process URLs into links
             const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -700,7 +715,7 @@
                 try {
                     const urlObj = new URL(url);
                     const domain = urlObj.hostname.replace('www.', '') + (urlObj.pathname !== '/' ? urlObj.pathname : '');
-                    return '<a href="' + url + '" target="_blank">' + domain + '</a>';
+                    return '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(domain) + '</a>';
                 } catch {
                     return url;
                 }
@@ -714,7 +729,7 @@
             const imageMatch = title.match(/\[\$\/\/(image|url):(.*?)\/\/\]/);
             if (imageMatch) {
                 const cleanTitle = title.replace(/\[\$\/\/(image|url):.*?\/\/\]/g, '').trim();
-                return { title: cleanTitle, image: imageMatch[2] };
+                return { title: cleanTitle, image: imageMatch[2].trim() };
             }
             return { title, image: null };
         }
@@ -723,7 +738,7 @@
         function extractTags(title) {
             const tagMatches = title.match(/\/\#[^\/]+\//g);
             if (tagMatches) {
-                const tags = tagMatches.map(tag => tag.slice(2, -1)); // Remove /# and /
+                const tags = tagMatches.map(tag => tag.slice(2, -1).trim()); // Remove /# and / and trim
                 const cleanTitle = title.replace(/\/\#[^\/]+\//g, '').trim();
                 return { title: cleanTitle, tags: tags };
             }
@@ -807,6 +822,8 @@
 
                 const postDiv = document.createElement('div');
                 postDiv.className = 'blog-post' + (post.pinned ? ' pinned' : '');
+                postDiv.setAttribute('role', 'article');
+                postDiv.setAttribute('tabindex', '0');
                 
                 let html = '<div class="blog-post-main">';
                 html += '<h2><span>' + title + '</span>';
@@ -830,7 +847,13 @@
                 }
                 
                 postDiv.innerHTML = html;
-                postDiv.onclick = () => openPostFullscreen(title, content, date, post.pinned, image, tags);
+                postDiv.addEventListener('click', () => openPostFullscreen(title, content, date, post.pinned, image, tags));
+                postDiv.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openPostFullscreen(title, content, date, post.pinned, image, tags);
+                    }
+                });
                 container.appendChild(postDiv);
             });
         }
@@ -1001,6 +1024,8 @@
             
             function updateMobileFocus() {
                 const posts = document.querySelectorAll('.blog-post');
+                if (posts.length === 0) return;
+                
                 const viewportCenter = window.innerHeight / 2 + window.scrollY;
                 const isAtTop = window.scrollY < 100;
                 
@@ -1031,15 +1056,20 @@
             
             window.addEventListener('scroll', () => {
                 if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        updateMobileFocus();
-                    });
+                    window.requestAnimationFrame(updateMobileFocus);
                     ticking = true;
                 }
-            });
+            }, { passive: true });
             
-            // Initial check
-            setTimeout(updateMobileFocus, 500);
+            // Initial check after posts load
+            const observer = new MutationObserver(() => {
+                const posts = document.querySelectorAll('.blog-post');
+                if (posts.length > 0) {
+                    updateMobileFocus();
+                    observer.disconnect();
+                }
+            });
+            observer.observe(document.getElementById('blogPosts'), { childList: true });
         }
     </script>
 </body>
