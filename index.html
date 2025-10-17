@@ -327,17 +327,18 @@
             height: 100%;
             background: rgba(0, 0, 0, 0);
             z-index: 2000;
+            align-items: center;
+            justify-content: center;
             transition: background 0.3s ease;
         }
 
         .modal.show {
             display: flex;
-            align-items: center;
-            justify-content: center;
             background: rgba(0, 0, 0, 0.5);
         }
 
         .modal.hiding {
+            display: flex;
             background: rgba(0, 0, 0, 0);
         }
 
@@ -904,7 +905,7 @@
             setTimeout(() => document.getElementById('suggestionTitle').focus(), 100);
         }
 
-        function submitSuggestion() {
+        async function submitSuggestion() {
             const title = document.getElementById('suggestionTitle').value.trim();
             const body = document.getElementById('suggestionBody').value.trim();
             
@@ -923,24 +924,69 @@
             const suggestionNum = Math.floor(Math.random() * 10000);
             const filename = `${suggestionData.name}_${suggestionNum}.txt`;
             
-            // Create a downloadable file
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(url);
-            
+            // Show loading state
             modalContent.innerHTML = `
                 <button class="modal-close" onclick="closeModal()">×</button>
-                <div style="font-size: 18px;">Thank you for your suggestion!</div>
-                <div style="font-size: 14px; color: #666; margin-top: 10px;">Your suggestion has been downloaded as ${filename}</div>
-                <div style="font-size: 13px; color: #999; margin-top: 10px;">Upload it to ./suggestions/ folder on the server</div>
-                <div class="modal-buttons">
-                    <button class="modal-button" onclick="closeModal()">Done</button>
-                </div>
+                <div style="font-size: 18px;">Submitting your suggestion...</div>
+                <div style="font-size: 14px; color: #666; margin-top: 10px;">Please wait...</div>
             `;
+            
+            try {
+                // GitHub API configuration
+                const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN_HERE'; // Replace with your token
+                const REPO_OWNER = 'YOUR_USERNAME'; // Replace with your GitHub username
+                const REPO_NAME = 'YOUR_REPO_NAME'; // Replace with your repo name
+                const BRANCH = 'main'; // or 'master' depending on your default branch
+                
+                // Encode content to base64
+                const encodedContent = btoa(unescape(encodeURIComponent(content)));
+                
+                // Create file via GitHub API
+                const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/suggestions/${filename}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: `New suggestion from ${suggestionData.name}`,
+                        content: encodedContent,
+                        branch: BRANCH
+                    })
+                });
+                
+                if (response.ok) {
+                    modalContent.innerHTML = `
+                        <button class="modal-close" onclick="closeModal()">×</button>
+                        <div style="font-size: 18px;">Thank you for your suggestion!</div>
+                        <div style="font-size: 14px; color: #666; margin-top: 10px;">Your suggestion has been submitted successfully.</div>
+                        <div class="modal-buttons">
+                            <button class="modal-button" onclick="closeModal()">Done</button>
+                        </div>
+                    `;
+                } else {
+                    throw new Error('Failed to submit');
+                }
+            } catch (error) {
+                // Fallback to download if GitHub API fails
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                modalContent.innerHTML = `
+                    <button class="modal-close" onclick="closeModal()">×</button>
+                    <div style="font-size: 18px;">Couldn't submit automatically</div>
+                    <div style="font-size: 14px; color: #666; margin-top: 10px;">Your suggestion has been downloaded as ${filename}</div>
+                    <div style="font-size: 13px; color: #999; margin-top: 10px;">Please send it to the site owner</div>
+                    <div class="modal-buttons">
+                        <button class="modal-button" onclick="closeModal()">Done</button>
+                    </div>
+                `;
+            }
         }
 
         // Load posts
