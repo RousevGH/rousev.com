@@ -6,180 +6,112 @@
 <title>The Whole Domain</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-    --accent: #596BFF;
-    --danger: #A4142C;
-    --bg-light: #f8f8f8;
-    --bg-dark: #0F1116;
-    --post-light-top: #ffffff40;
-    --post-light-bottom: #00000010;
-    --post-dark-top: #1d212c;
-    --post-dark-bottom: #07090d;
-    --text-light: #1a1a1a;
-    --text-dark: #eee;
+    --accent:#596BFF;
+    --bg-light:#f7f7fa;
+    --bg-dark:#0F1116;
+    --text-light:#111;
+    --text-dark:#eee;
+    --post-l1:#ffffff60;
+    --post-l2:#00000010;
+    --post-d1:#1c1f27;
+    --post-d2:#080a0f;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    font-family:Inter,sans-serif;
+    background:var(--bg-light);
+    color:var(--text-light);
+    padding-top:70px;
+    transition:.35s;
+}
+body.dark{background:var(--bg-dark);color:var(--text-dark);}
 
-body {
-    font-family: Inter, sans-serif;
-    background: var(--bg-light);
-    color: var(--text-light);
-    padding-top: 70px;
-    transition: background .35s ease, color .35s ease;
-}
-body.dark {
-    background: var(--bg-dark);
-    color: var(--text-dark);
-}
-
-.top {
-    position: fixed;
-    top:0; left:0; width:100%; height:60px;
-    display:flex; justify-content:space-between; align-items:center;
-    padding: 0 18px;
-    backdrop-filter: blur(18px);
-    z-index:50;
-}
-.headerText {
-    font-size:18px;
-    font-weight:600;
-}
-.icon {
-    width: 25px; height:25px;
-    cursor:pointer;
-    stroke: currentColor;
-    stroke-width:1.7;
-    fill:none;
-    transition: .25s ease;
-}
-body.dark .icon { color:var(--text-dark); }
-body:not(.dark) .icon { color:var(--text-light); }
-.icon:hover {
-    color: var(--accent);
-    transform: scale(1.13);
+.top{
+    position:fixed;inset:0 auto auto 0;height:60px;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:0 18px;backdrop-filter:blur(16px);z-index:50;
 }
 
-.sort-menu {
-    position:absolute;
-    right:0;
-    top:40px;
-    background:inherit;
-    padding:8px 0;
-    border-radius:10px;
-    display:none;
-    backdrop-filter: blur(10px);
-    width:160px;
+.icon{
+    width:24px;height:24px;cursor:pointer;
+    fill:currentColor;transition:.22s;
 }
-.sort-menu.show { display:block; }
+.icon:hover{color:var(--accent);transform:scale(1.12);}
 
-.sort-option {
-    padding:10px 14px;
-    cursor:pointer;
-    gap:10px;
-    display:flex; align-items:center;
+.sort-menu{
+    position:absolute;top:38px;right:0;display:none;
+    background:inherit;border-radius:10px;padding:8px 0;
+    backdrop-filter:blur(14px);width:160px;
+}
+.sort-menu.show{display:block;}
+.sort-option{
+    padding:10px 14px;cursor:pointer;display:flex;gap:10px;align-items:center;
+}
+.sort-option:hover{background:rgba(255,255,255,.12);}
+
+.container{max-width:900px;margin:0 auto;padding:30px 18px;}
+
+.post{
+    padding:25px;margin-bottom:26px;border-radius:14px;
+    background:linear-gradient(to bottom,var(--post-l1),var(--post-l2));
+    cursor:pointer;transition:.25s;
+}
+body.dark .post{
+    background:linear-gradient(to bottom,var(--post-d1),var(--post-d2));
+}
+.post:hover{
+    transform:translateY(-4px) scale(1.03);
+    box-shadow:0 12px 36px rgba(0,0,0,.32);
+}
+
+.post.pinned{
+    border:2px solid var(--accent);
+    box-shadow:0 0 18px rgba(89,107,255,.45);
+}
+
+.tags{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
+.tag{
+    background:var(--accent);color:#fff;
+    padding:3px 9px;border-radius:6px;font-size:12px;
     transition:.2s;
 }
-.sort-option:hover {
-    background:rgba(255,255,255,.12);
+.tag:hover{transform:scale(1.1);}
+
+.post img{
+    width:150px;height:150px;border-radius:10px;
+    object-fit:cover;float:right;margin-left:10px;
 }
 
-.container {
-    max-width:900px;
-    margin:0 auto;
-    padding:35px 20px;
-}
+.post-title{font-size:22px;font-weight:600;margin-bottom:10px;}
+.date{opacity:.65;font-size:13px;margin-top:10px;}
 
-.post {
-    padding:28px;
-    margin-bottom:34px;
-    border-radius:16px;
-    background:linear-gradient(to bottom,var(--post-light-top),var(--post-light-bottom));
-    transition:transform .25s ease, box-shadow .25s ease;
-    cursor:pointer;
+.fullscreen{
+    position:fixed;inset:0;
+    display:none;justify-content:center;
+    background:rgba(0,0,0,.55);backdrop-filter:blur(12px);
+    z-index:100;padding:30px;
 }
-body.dark .post {
-    background:linear-gradient(to bottom,var(--post-dark-top),var(--post-dark-bottom));
+.fullscreen-inner{
+    background:inherit;padding:35px 26px;
+    max-width:800px;width:100%;border-radius:16px;
+    animation:fadePop .35s cubic-bezier(.16,1,.3,1);
 }
-.post:hover {
-    transform:translateY(-6px) scale(1.03) rotate3d(1,0,0,.35deg);
-    box-shadow:0 18px 50px rgba(0,0,0,.35);
+@keyframes fadePop{
+    0%{transform:scale(.8) translateY(20px);opacity:0;}
+    100%{transform:scale(1) translateY(0);opacity:1;}
 }
+.close{
+    position:absolute;top:14px;right:20px;
+    font-size:30px;cursor:pointer;opacity:.65;
+}
+.close:hover{opacity:1;}
 
-.post.pinned {
-    border:2px solid var(--accent);
-    box-shadow:0 0 22px rgba(89,107,255,.55);
-}
-
-.post img {
-    width:160px; height:160px;
-    object-fit:cover; border-radius:12px;
-    float:right; margin-left:15px;
-}
-
-.post-title {
-    font-size:24px;
-    margin-bottom:12px;
-    font-weight:600;
-}
-
-.tags {
-    display:flex; gap:8px; margin-bottom:8px;
-}
-.tag {
-    background:var(--accent);
-    color:#fff;
-    padding:4px 10px;
-    border-radius:7px;
-    font-size:13px;
-    transition:.24s ease;
-}
-.tag:hover { transform:scale(1.1); }
-
-.date {
-    margin-top:12px;
-    opacity:.7;
-    font-size:13px;
-}
-
-.fullscreen {
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    backdrop-filter:blur(12px);
-    display:none; justify-content:center;
-    padding:20px;
-    z-index:100;
-}
-.fullscreen-inner {
-    max-width:850px;
-    width:100%;
-    background:inherit;
-    padding:40px 28px;
-    border-radius:16px;
-    animation:modalPop .35s cubic-bezier(.16,1,.3,1);
-}
-@keyframes modalPop {
-    0% {transform:scale(.8) translateY(20px); opacity:0;}
-    100% {transform:scale(1) translateY(0); opacity:1;}
-}
-
-.close {
-    position:absolute;
-    top:18px; right:22px;
-    font-size:32px;
-    cursor:pointer;
-    opacity:.7;
-}
-.close:hover { opacity:1; }
-
-@media(max-width:768px) {
-    .post img {
-        width:100%; height:220px;
-        float:none; margin:0 0 10px;
-    }
+@media(max-width:800px){
+    .post img{width:100%;height:200px;margin:0 0 10px;float:none;}
 }
 </style>
 </head>
@@ -187,134 +119,131 @@ body.dark .post {
 <body>
 
 <div class="top">
-    <div class="headerText">I bought the whole domain, I'm going to use the whole domain</div>
-    <div style="display:flex;gap:15px;align-items:center;">
-        <div class="sort">
-            <svg class="icon" id="sortBtn" viewBox="0 0 24 24">
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <line x1="3" y1="12" x2="15" y2="12"/>
-                <line x1="3" y1="18" x2="9" y2="18"/>
+    <div style="font-size:18px;font-weight:600;">
+        I bought the whole domain, I'm going to use the whole domain
+    </div>
+
+    <div style="display:flex;gap:16px;align-items:center;">
+
+        <div style="position:relative;">
+            <svg id="sortBtn" class="icon" viewBox="0 0 24 24">
+                <path d="M3 6h18v2H3V6zm4 5h14v2H7v-2zm6 5h8v2h-8v-2z"/>
             </svg>
             <div class="sort-menu" id="sortMenu">
                 <div class="sort-option" data-sort="date">🕓 Newest First</div>
-                <div class="sort-option" data-sort="random">🔀 Shuffle</div>
+                <div class="sort-option" data-sort="random">🎲 Shuffle</div>
                 <div class="sort-option" data-sort="length">📏 Length</div>
                 <div class="sort-option" data-sort="tag">🏷️ Tag</div>
             </div>
         </div>
 
-        <svg class="icon" id="discord" viewBox="0 0 24 24">
-            <path d="M20 4s-2-1-5-1l-.5 1.3a14.7 14.7 0 0 0-2.5-.3c-1 0-1.8.2-2.5.3L9 3C6 3 4 4 4 4S2 9 2 14c3 3 7 3 7 3l1-2s-1.2-.6-2-.9l-.2-.3s.4-.1.8.1c2 1.4 6 1.4 8 0 .4-.2.8-.1.8-.1l-.2.3c-.8.3-2 .9-2 .9l1 2s4 0 7-3c0-5-2-10-2-10z"/>
+        <svg id="discord" class="icon" viewBox="0 0 24 24">
+            <path d="M20 4s-2-1-5-1l-.5 1.3..." />
         </svg>
 
-        <svg class="icon" id="themeToggle" viewBox="0 0 24 24">
-            <path d="M12 3a9 9 0 1 0 9 9A7 7 0 0 1 12 3z"/>
+        <svg id="themeToggle" class="icon" viewBox="0 0 24 24">
+            <path d="M12 2a10 10 0 1 0 10 10A7 7 0 0 1 12 2z"/>
         </svg>
+
     </div>
 </div>
 
 <div class="container"><div id="posts"></div></div>
 
 <div id="modal" class="fullscreen">
-    <div class="fullscreen-inner" id="modalContent"></div>
+    <div id="modalContent" class="fullscreen-inner"></div>
     <div class="close" onclick="closeModal()">×</div>
 </div>
 
 <script>
-let allPosts = [];
+let posts = [];
 let sortMode = "date";
 
-document.getElementById("themeToggle").onclick=()=>document.body.classList.toggle("dark");
-document.getElementById("sortBtn").onclick=()=>document.getElementById("sortMenu").classList.toggle("show");
+sortBtn.onclick=()=>sortMenu.classList.toggle("show");
+themeToggle.onclick=()=>document.body.classList.toggle("dark");
 
-async function loadPosts(){
-    let pin=null;
+async function load(){
+    let pinned=null;
     try{
-        let r=await fetch("./Posts/IMPORTANT.txt");
-        if(r.ok) pin={number:-1,content:await r.text(),pinned:true};
+        let r=await fetch("Posts/IMPORTANT.txt");
+        if(r.ok) pinned={content:await r.text(),pinned:true};
     }catch{}
 
     let i=1;
     while(true){
-        let r=await fetch("./Posts/Thing_"+i+".txt");
+        let r=await fetch(`Posts/Thing_${i}.txt`);
         if(!r.ok) break;
-        allPosts.push({number:i,content:await r.text()});
+        posts.push({content:await r.text()});
         i++;
     }
-    if(pin) allPosts.unshift(pin);
-    sortPosts();
+
+    if(pinned) posts.unshift(pinned);
+    applySort();
 }
 
-function extractDate(c){
-    let m=c.match(/\\[(\\d{2})\\.(\\d{2})\\.(\\d{4})\\]/);
+function parseDate(t){
+    let m=t.match(/\\[(\\d{2})\\.(\\d{2})\\.(\\d{4})\\]/);
     if(!m) return new Date(0);
     return new Date(+m[3],+m[2]-1,+m[1]);
-}
-
-function contentLen(c){
-    return c.split("\\n").slice(1).join("").length;
-}
-
-function sortPosts(){
-    if(sortMode==="date") allPosts.sort((a,b)=>extractDate(b.content)-extractDate(a.content));
-    if(sortMode==="random") allPosts.sort(()=>Math.random()-.5);
-    if(sortMode==="length") allPosts.sort((a,b)=>contentLen(b.content)-contentLen(a.content));
-    displayPosts();
-}
-
-function extractTags(t){
-    return (t.match(/\\/#[^\\/]+\\//g)||[]).map(x=>x.replace(/[\\/#]/g,""));
 }
 
 function cleanTitle(l){
     return l.replace(/\\[\\$\\/.*?\\/\\]/g,"").replace(/\\/#[^\\/]+\\//g,"").trim();
 }
+function extractTags(l){
+    return (l.match(/\\/#[^\\/]+\\//g)||[]).map(x=>x.replace(/[\\/#]/g,""));
+}
 
-function displayPosts(){
-    let box=document.getElementById("posts");
-    box.innerHTML="";
-    allPosts.forEach(p=>{
-        let L=p.content.split("\\n");
-        let title=cleanTitle(L[0]);
-        let tags=extractTags(L[0]);
-        let imgMatch=L[0].match(/\\[\\$\\/url:(.*?)\\/\\]/);
-        let img=imgMatch?imgMatch[1]:null;
-        let raw=L.slice(1).join("\\n");
-        let d=extractDate(p.content);
-        let dateStr=d>0?d.toLocaleDateString(): "";
+function applySort(){
+    if(sortMode==="date") posts.sort((a,b)=>parseDate(b.content)-parseDate(a.content));
+    if(sortMode==="random") posts.sort(()=>Math.random()-.5);
+    if(sortMode==="length") posts.sort((a,b)=>b.content.length-a.content.length);
+    renderPosts();
+}
 
-        let div=document.createElement("div");
-        div.className="post";
-        if(p.pinned) div.classList.add("pinned");
+function renderPosts(){
+    let wrap=document.getElementById("posts");
+    wrap.innerHTML="";
 
-        div.innerHTML=`
-            ${img?`<img src=\"${img}\">`:""}
+    posts.forEach(p=>{
+        let l=p.content.split("\\n");
+        let title=cleanTitle(l[0]);
+        let tags=extractTags(l[0]);
+        let img=(l[0].match(/\\[\\$\\/url:(.*?)\\/\\]/)||[])[1];
+        let body=l.slice(1).join("\\n");
+        let date=parseDate(p.content).toLocaleDateString();
+
+        let c=document.createElement("div");
+        c.className="post";
+        if(p.pinned) c.classList.add("pinned");
+        c.innerHTML=`
+            ${img?`<img src="${img}">`:""}
             <div class='post-title'>${title}</div>
-            <div class='tags'>${tags.map(t=>`<div class='tag'>${t}</div>`).join("")}</div>
-            <div class='date'>${dateStr}</div>
-        `;
-        div.onclick=()=>openModal(title,raw,dateStr);
-        box.append(div);
+            <div class='tags'>${tags.map(t=>`<div class="tag">${t}</div>`).join("")}</div>
+            <div class='date'>${date}</div>`;
+        c.onclick=()=>openModal(title,body,date);
+        wrap.appendChild(c);
     });
 }
 
-function openModal(title,raw,date){
-    let m=document.getElementById("modalContent");
-    m.innerHTML=`<h2>${title}</h2><div style='white-space:pre-wrap;margin-top:18px;font-size:17px;'>${process(raw)}</div><div style='margin-top:14px;opacity:.65;'>${date}</div>`;
-    document.getElementById("modal").style.display="flex";
+function openModal(t,b,d){
+    modalContent.innerHTML=
+        `<h2>${t}</h2>
+        <div style='white-space:pre-wrap;margin-top:12px;font-size:17px;'>${b}</div>
+        <div style='margin-top:14px;opacity:.65;'>${d}</div>`;
+    modal.style.display="flex";
 }
-function closeModal(){document.getElementById("modal").style.display="none";}
-function process(t){return t.replace(/https?:\\/\\/[^\\s]+/g,u=>`<a href='${u}' target='_blank'>${u}</a>`);}
 
-document.querySelectorAll(".sort-option").forEach(o=>{
-    o.onclick=()=>{
-        sortMode=o.dataset.sort;
-        sortPosts();
-        document.getElementById("sortMenu").classList.remove("show");
-    };
+function closeModal(){ modal.style.display="none"; }
+
+document.querySelectorAll(".sort-option").forEach(o=>o.onclick=()=>{
+    sortMode=o.dataset.sort;
+    applySort();
+    sortMenu.classList.remove("show");
 });
 
-loadPosts();
+load();
 </script>
+
 </body>
 </html>
