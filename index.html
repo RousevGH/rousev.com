@@ -3,1193 +3,318 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rousev’s Stuff</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235865f2'/%3E%3Cstop offset='1' stop-color='%23b30b3b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='48' fill='url(%23g)'/%3E%3C/svg%3E">
+<title>The Whole Domain</title>
+
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  color-scheme: light dark;
-  --bg-light-top:#f9f7ff;
-  --bg-light-bottom:#e7e5f2;
-  --bg-dark-top:#050813;
-  --bg-dark-bottom:#070b18;
-  --surface-light:rgba(255,255,255,0.8);
-  --surface-dark:rgba(16,20,36,0.9);
-  --blurple:#5865f2;
-  --velvet:#b30b3b;
-  --text-light:#11131a;
-  --text-dark:#f5f5ff;
-  --muted-light:rgba(12,16,32,0.55);
-  --muted-dark:rgba(230,232,255,0.5);
-  --border-light:rgba(40,40,80,0.08);
-  --border-dark:rgba(255,255,255,0.12);
-}
-body{
-  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  min-height:100vh;
-  color:var(--text-light);
-  background:radial-gradient(circle at 0% 0%,#ffffff 0,#f7f5ff 25%,transparent 55%),
-             radial-gradient(circle at 100% 0%,#fef3ff 0,#f1edff 30%,transparent 60%),
-             linear-gradient(to bottom,var(--bg-light-top),var(--bg-light-bottom));
-  background-attachment:fixed;
-  padding-top:64px;
-  -webkit-font-smoothing:antialiased;
-  transition:background .6s ease,color .4s ease;
-}
-body.dark{
-  color:var(--text-dark);
-  background:
-    radial-gradient(circle at 10% 0%,rgba(88,101,242,0.35) 0,transparent 55%),
-    radial-gradient(circle at 90% 0%,rgba(179,11,59,0.5) 0,transparent 55%),
-    linear-gradient(to bottom,var(--bg-dark-top),var(--bg-dark-bottom));
-}
-.app-shell{
-  max-width:980px;
-  margin:0 auto;
-  padding:24px 16px 56px;
-}
-.header{
-  position:fixed;
-  inset:0 0 auto 0;
-  height:64px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 18px;
-  background:linear-gradient(to bottom,rgba(255,255,255,0.9),rgba(247,247,255,0.85));
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  border-bottom:1px solid var(--border-light);
-  z-index:40;
-  transition:transform .28s ease,background .4s ease,border-color .4s ease;
-}
-body.dark .header{
-  background:linear-gradient(to bottom,rgba(7,9,18,0.96),rgba(8,11,22,0.9));
-  border-bottom-color:var(--border-dark);
-}
-.header.hidden{
-  transform:translateY(-100%);
-}
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  letter-spacing:-0.04em;
-  font-weight:600;
-  font-size:16px;
-}
-.brand-avatar{
-  width:28px;
-  height:28px;
-  border-radius:999px;
-  background:conic-gradient(from 140deg,var(--blurple),var(--velvet),#ffd868,var(--blurple));
-  padding:2px;
-  position:relative;
-}
-.brand-avatar-inner{
-  width:100%;
-  height:100%;
-  border-radius:inherit;
-  background:radial-gradient(circle at 30% 0%,rgba(255,255,255,0.8),rgba(250,248,255,0.4),rgba(230,230,255,0.05));
-}
-.brand-dot{
-  position:absolute;
-  right:0;
-  bottom:0;
-  width:9px;
-  height:9px;
-  border-radius:999px;
-  background:radial-gradient(circle at 30% 30%,#fff,var(--blurple));
-  box-shadow:0 0 8px rgba(88,101,242,0.6);
-}
-.header-right{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
-.icon-button{
-  width:32px;
-  height:32px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:999px;
-  background:radial-gradient(circle at 30% 0%,rgba(255,255,255,0.9),rgba(240,240,255,0.7));
-  border:1px solid rgba(40,40,80,0.18);
-  cursor:pointer;
-  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background .3s ease;
-}
-body.dark .icon-button{
-  background:radial-gradient(circle at 30% 0%,rgba(35,39,80,0.9),rgba(15,18,40,0.9));
-  border-color:rgba(200,210,255,0.15);
-}
-.icon-button svg{
-  width:17px;
-  height:17px;
-  opacity:.82;
-  transition:opacity .2s ease,transform .18s ease;
-}
-.icon-button:hover{
-  transform:translateY(-1px) scale(1.05);
-  box-shadow:0 10px 24px rgba(0,0,0,0.18);
-  border-color:var(--blurple);
-}
-.icon-button:hover svg{
-  opacity:1;
-  transform:translateY(-0.5px);
-}
-.icon-button:active{
-  transform:translateY(0) scale(0.98);
-  box-shadow:0 3px 10px rgba(0,0,0,0.18);
-}
-.sort-shell{
-  position:relative;
-}
-.sort-trigger{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:500;
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  cursor:pointer;
-  background:linear-gradient(to bottom,rgba(255,255,255,0.95),rgba(240,240,255,0.85));
-  border:1px solid rgba(40,40,80,0.18);
-  transition:background .2s ease,border-color .2s ease,transform .12s ease,box-shadow .2s ease;
-}
-body.dark .sort-trigger{
-  background:linear-gradient(to bottom,rgba(18,22,44,0.96),rgba(10,14,30,0.94));
-  border-color:rgba(210,220,255,0.16);
-}
-.sort-trigger:hover{
-  transform:translateY(-1px);
-  box-shadow:0 10px 30px rgba(0,0,0,0.24);
-  border-color:var(--blurple);
-}
-.sort-label{
-  opacity:.8;
-}
-.sort-chevron{
-  width:14px;
-  height:14px;
-  display:inline-block;
-}
-.sort-chevron svg{
-  width:100%;
-  height:100%;
-}
-.sort-menu{
-  position:absolute;
-  right:0;
-  top:120%;
-  min-width:210px;
-  padding:8px;
-  background:linear-gradient(to bottom,rgba(255,255,255,0.98),rgba(243,243,255,0.96));
-  border-radius:14px;
-  border:1px solid rgba(40,40,80,0.18);
-  box-shadow:0 22px 55px rgba(10,10,40,0.35);
-  opacity:0;
-  transform:translateY(-6px);
-  pointer-events:none;
-  transition:opacity .16s ease,transform .16s ease;
-  z-index:60;
-}
-body.dark .sort-menu{
-  background:linear-gradient(to bottom,rgba(10,11,24,0.98),rgba(8,9,20,0.98));
-  border-color:rgba(210,220,255,0.20);
-}
-.sort-menu.open{
-  opacity:1;
-  transform:translateY(0);
-  pointer-events:auto;
-}
-.sort-item{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:7px 9px;
-  margin-bottom:2px;
-  border-radius:9px;
-  font-size:13px;
-  cursor:pointer;
-  transition:background .15s ease,color .15s ease,transform .12s ease;
-  color:inherit;
-}
-.sort-item:last-child{
-  margin-bottom:0;
-}
-.sort-item span:nth-child(2){
-  opacity:.6;
-  font-size:11px;
-}
-.sort-item:hover{
-  background:linear-gradient(to right,rgba(88,101,242,0.09),rgba(179,11,59,0.08));
-  transform:translateY(-1px);
-}
-.sort-item.active{
-  background:linear-gradient(135deg,rgba(88,101,242,0.22),rgba(179,11,59,0.18));
-}
-.sort-tag-input{
-  width:100%;
-  margin-top:6px;
-  padding:6px 9px;
-  border-radius:9px;
-  border:1px solid rgba(60,60,120,0.25);
-  font-size:12px;
-  background:linear-gradient(to bottom,rgba(255,255,255,0.95),rgba(245,245,255,0.95));
-  outline:none;
-  color:inherit;
-}
-body.dark .sort-tag-input{
-  background:linear-gradient(to bottom,rgba(15,16,32,0.96),rgba(9,10,22,0.96));
-  border-color:rgba(190,200,255,0.3);
-}
-.sort-tag-input::placeholder{
-  opacity:.6;
-}
-.hero{
-  margin-bottom:18px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-.hero-title{
-  font-size:28px;
-  letter-spacing:-0.05em;
-  font-weight:600;
-}
-.hero-sub{
-  font-size:13px;
-  color:var(--muted-light);
-}
-body.dark .hero-sub{
-  color:var(--muted-dark);
-}
-.feed-wrap{
-  border-radius:24px;
-  padding:18px 14px 22px;
-  position:relative;
-  background:
-    radial-gradient(circle at 0 0,rgba(88,101,242,0.14) 0,transparent 55%),
-    radial-gradient(circle at 100% 0,rgba(179,11,59,0.16) 0,transparent 55%),
-    linear-gradient(to bottom,rgba(255,255,255,0.9),rgba(235,235,250,0.9));
-  background-attachment:fixed;
-  border:1px solid var(--border-light);
-  box-shadow:0 18px 40px rgba(10,10,40,0.16);
-  overflow:hidden;
-}
-body.dark .feed-wrap{
-  background:
-    radial-gradient(circle at 0 0,rgba(88,101,242,0.21) 0,transparent 55%),
-    radial-gradient(circle at 100% 0,rgba(179,11,59,0.26) 0,transparent 55%),
-    linear-gradient(to bottom,rgba(7,9,20,0.96),rgba(3,4,10,0.98));
-  border-color:rgba(170,180,255,0.18);
-  box-shadow:0 26px 70px rgba(0,0,0,0.7);
-}
-.feed-glow{
-  position:absolute;
-  inset:auto -40% 40%;
-  height:120px;
-  background:radial-gradient(circle at 50% 0,rgba(255,255,255,0.55),transparent 60%);
-  opacity:.55;
-  pointer-events:none;
-  mix-blend-mode:soft-light;
-}
-body.dark .feed-glow{
-  background:radial-gradient(circle at 50% 0,rgba(88,101,242,0.65),transparent 65%);
-  opacity:.33;
-}
-.entry-list{
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-  z-index:1;
-}
-.entry-card{
-  position:relative;
-  border-radius:18px;
-  padding:18px 18px 16px;
-  background:linear-gradient(to bottom,rgba(255,255,255,0.94),rgba(243,243,255,0.92));
-  border:1px solid rgba(40,40,80,0.15);
-  box-shadow:0 14px 30px rgba(20,20,60,0.16);
-  display:flex;
-  gap:16px;
-  transform-origin:center;
-  transform-style:preserve-3d;
-  cursor:pointer;
-  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease,background .25s ease;
-}
-body.dark .entry-card{
-  background:linear-gradient(to bottom,rgba(15,17,32,0.98),rgba(9,11,24,0.98));
-  border-color:rgba(155,165,255,0.24);
-  box-shadow:0 22px 45px rgba(0,0,0,0.9);
-}
-.entry-card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  background:linear-gradient(135deg,rgba(88,101,242,0.14),rgba(179,11,59,0.12));
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .3s ease;
-}
-.entry-card:hover::before{
-  opacity:1;
-}
-.entry-card:hover{
-  box-shadow:0 22px 55px rgba(10,10,40,0.45);
-  border-color:rgba(88,101,242,0.7);
-}
-.entry-main{
-  flex:1;
-  min-width:0;
-}
-.entry-title-row{
-  display:flex;
-  align-items:flex-start;
-  gap:8px;
-  margin-bottom:6px;
-}
-.entry-title{
-  font-size:18px;
-  font-weight:600;
-  letter-spacing:-0.03em;
-}
-.entry-tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:3px;
-}
-.entry-tag{
-  font-size:11px;
-  padding:3px 8px;
-  border-radius:999px;
-  background:linear-gradient(135deg,var(--blurple),var(--velvet));
-  color:#fff;
-  text-transform:lowercase;
-  letter-spacing:.03em;
-  border:1px solid rgba(255,255,255,0.35);
-  box-shadow:0 5px 12px rgba(88,101,242,0.6);
-  transition:transform .15s ease,box-shadow .15s ease,filter .15s ease;
-}
-.entry-tag:hover{
-  transform:translateY(-1px) scale(1.04);
-  box-shadow:0 10px 18px rgba(179,11,59,0.7);
-  filter:brightness(1.06);
-}
-.entry-body{
-  font-size:14px;
-  line-height:1.55;
-  color:var(--muted-light);
-  white-space:pre-wrap;
-  word-wrap:break-word;
-}
-body.dark .entry-body{
-  color:var(--muted-dark);
-}
-.entry-meta{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:10px;
-  font-size:11px;
-  color:var(--muted-light);
-}
-body.dark .entry-meta{
-  color:var(--muted-dark);
-}
-.entry-date{
-  font-style:italic;
-}
-.entry-badge{
-  padding:3px 7px;
-  border-radius:999px;
-  border:1px solid rgba(0,0,0,0.08);
-  background:linear-gradient(to bottom,rgba(255,255,255,0.85),rgba(238,238,255,0.9));
-}
-body.dark .entry-badge{
-  border-color:rgba(255,255,255,0.15);
-  background:linear-gradient(to bottom,rgba(24,26,50,0.9),rgba(10,10,28,0.95));
-}
-.entry-media{
-  flex-shrink:0;
-  width:136px;
-  height:136px;
-  border-radius:14px;
-  overflow:hidden;
-  background:radial-gradient(circle at 30% 0,rgba(255,255,255,0.9),rgba(245,245,255,0.4),rgba(200,200,255,0.1));
-  border:1px solid rgba(40,40,80,0.18);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease,background .25s ease;
-}
-body.dark .entry-media{
-  background:radial-gradient(circle at 5% 0,rgba(255,255,255,0.15),rgba(21,23,50,0.9));
-  border-color:rgba(170,180,255,0.4);
-}
-.entry-card:hover .entry-media{
-  transform:translateZ(18px) translateY(-3px);
-  box-shadow:0 16px 28px rgba(10,10,40,0.7);
-  border-color:rgba(255,255,255,0.8);
-}
-.entry-media img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-.inline-icon{
-  height:1.05em;
-  vertical-align:-0.15em;
-  border-radius:6px;
-}
-.skeleton{
-  position:relative;
-  overflow:hidden;
-}
-.skeleton::after{
-  content:"";
-  position:absolute;
-  inset:-40%;
-  background:linear-gradient(120deg,transparent 0,rgba(255,255,255,0.65) 40%,rgba(255,255,255,0.2) 55%,transparent 100%);
-  transform:translateX(-60%);
-  animation:shimmer 1.2s linear infinite;
-  opacity:.7;
-}
-body.dark .skeleton::after{
-  background:linear-gradient(120deg,transparent 0,rgba(255,255,255,0.25) 40%,rgba(255,255,255,0.05) 60%,transparent 100%);
-}
-.skeleton .entry-title,
-.skeleton .entry-body,
-.skeleton .entry-tags,
-.skeleton .entry-meta,
-.skeleton .entry-media{
-  background:linear-gradient(to right,rgba(210,210,240,0.7),rgba(236,236,252,0.8));
-  border-radius:10px;
-  color:transparent;
-}
-body.dark .skeleton .entry-title,
-body.dark .skeleton .entry-body,
-body.dark .skeleton .entry-tags,
-body.dark .skeleton .entry-meta,
-body.dark .skeleton .entry-media{
-  background:linear-gradient(to right,rgba(40,42,72,0.9),rgba(28,30,58,0.95));
-}
-.skeleton .entry-title{height:18px;max-width:60%;}
-.skeleton .entry-body{height:38px;margin-top:10px;}
-.skeleton .entry-tags{height:16px;margin-top:8px;max-width:120px;}
-.skeleton .entry-meta{height:14px;margin-top:10px;max-width:90px;}
-.skeleton .entry-media{height:96px;width:120px;}
-.detail-overlay{
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(2,3,10,0);
-  z-index:80;
-  transition:background .28s ease;
-}
-.detail-overlay.open{
-  display:flex;
-  background:rgba(2,3,10,0.8);
-}
-.detail-panel{
-  width:min(680px,100% - 40px);
-  max-height:80vh;
-  background:linear-gradient(to bottom,rgba(255,255,255,0.98),rgba(240,240,255,0.98));
-  border-radius:22px;
-  border:1px solid rgba(40,40,80,0.2);
-  box-shadow:0 30px 70px rgba(0,0,0,0.5);
-  padding:22px 22px 18px;
-  transform:translateY(16px) scale(0.98);
-  opacity:0;
-  display:flex;
-  flex-direction:column;
-  transition:transform .24s ease,opacity .24s ease,background .35s ease,border-color .35s ease;
-  overflow:hidden;
-}
-body.dark .detail-panel{
-  background:linear-gradient(to bottom,rgba(9,11,24,0.98),rgba(4,6,16,0.98));
-  border-color:rgba(175,185,255,0.4);
-}
-.detail-overlay.open .detail-panel{
-  opacity:1;
-  transform:translateY(0) scale(1);
-}
-.detail-header{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:16px;
-}
-.detail-title{
-  font-size:22px;
-  font-weight:600;
-  letter-spacing:-0.04em;
-}
-.detail-tags{
-  margin-top:6px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-}
-.detail-media{
-  width:100%;
-  max-height:260px;
-  border-radius:16px;
-  overflow:hidden;
-  margin-bottom:14px;
-  border:1px solid rgba(40,40,80,0.2);
-  background:radial-gradient(circle at 0 0,rgba(88,101,242,0.4),rgba(0,0,0,0.9));
-}
-.detail-media img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-.detail-body{
-  font-size:14px;
-  line-height:1.65;
-  color:var(--muted-light);
-  white-space:pre-wrap;
-}
-body.dark .detail-body{
-  color:var(--muted-dark);
-}
-.detail-footer{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-top:14px;
-  font-size:11px;
-  color:var(--muted-light);
-}
-body.dark .detail-footer{
-  color:var(--muted-dark);
-}
-.detail-close{
-  width:28px;
-  height:28px;
-  border-radius:999px;
-  border:1px solid rgba(40,40,80,0.18);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  font-size:16px;
-  opacity:.75;
-  transition:opacity .15s ease,transform .15s ease,background .2s ease,border-color .2s ease;
-}
-body.dark .detail-close{
-  border-color:rgba(200,210,255,0.35);
-}
-.detail-close:hover{
-  opacity:1;
-  transform:translateY(-1px);
-  background:radial-gradient(circle at 30% 0,rgba(255,255,255,0.96),rgba(240,240,255,0.9));
-}
-body.dark .detail-close:hover{
-  background:radial-gradient(circle at 30% 0,rgba(40,44,92,0.96),rgba(10,13,30,0.98));
-}
-.detail-close:active{
-  transform:translateY(0) scale(0.96);
-}
-.linkified{
-  color:var(--blurple);
-  text-decoration:none;
-  font-weight:500;
-}
-.linkified:hover{
-  text-decoration:underline;
-}
-@keyframes shimmer{
-  0%{transform:translateX(-60%);}
-  100%{transform:translateX(80%);}
-}
-@media (max-width:768px){
-  body{
-    padding-top:60px;
-  }
-  .header{
-    height:60px;
-    padding:0 12px;
-  }
-  .app-shell{
-    padding:18px 10px 42px;
-  }
-  .hero-title{
-    font-size:23px;
-  }
-  .entry-card{
-    padding:14px 13px 13px;
-    flex-direction:column;
-  }
-  .entry-media{
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --accent: #596BFF;
+    --danger: #A4142C;
+    --bg-light: #f8f8f8;
+    --bg-dark: #0F1116;
+    --post-light-top: #ffffff40;
+    --post-light-bottom: #00000010;
+    --post-dark-top: #1d212c;
+    --post-dark-bottom: #07090d;
+    --text-light: #1a1a1a;
+    --text-dark: #eee;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: Inter, sans-serif;
+    background: var(--bg-light);
+    color: var(--text-light);
+    padding-top: 70px;
+    transition: background .35s ease, color .35s ease;
+}
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+.top {
+    position: fixed;
+    top:0; left:0; width:100%; height:60px;
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 0 18px;
+    backdrop-filter: blur(18px);
+    z-index:50;
+}
+.headerText {
+    font-size:18px;
+    font-weight:600;
+}
+.icon {
+    width: 25px; height:25px;
+    cursor:pointer;
+    stroke: currentColor;
+    stroke-width:1.7;
+    fill:none;
+    transition: .25s ease;
+}
+body.dark .icon { color:var(--text-dark); }
+body:not(.dark) .icon { color:var(--text-light); }
+.icon:hover {
+    color: var(--accent);
+    transform: scale(1.13);
+}
+
+.sort-menu {
+    position:absolute;
+    right:0;
+    top:40px;
+    background:inherit;
+    padding:8px 0;
+    border-radius:10px;
+    display:none;
+    backdrop-filter: blur(10px);
+    width:160px;
+}
+.sort-menu.show { display:block; }
+
+.sort-option {
+    padding:10px 14px;
+    cursor:pointer;
+    gap:10px;
+    display:flex; align-items:center;
+    transition:.2s;
+}
+.sort-option:hover {
+    background:rgba(255,255,255,.12);
+}
+
+.container {
+    max-width:900px;
+    margin:0 auto;
+    padding:35px 20px;
+}
+
+.post {
+    padding:28px;
+    margin-bottom:34px;
+    border-radius:16px;
+    background:linear-gradient(to bottom,var(--post-light-top),var(--post-light-bottom));
+    transition:transform .25s ease, box-shadow .25s ease;
+    cursor:pointer;
+}
+body.dark .post {
+    background:linear-gradient(to bottom,var(--post-dark-top),var(--post-dark-bottom));
+}
+.post:hover {
+    transform:translateY(-6px) scale(1.03) rotate3d(1,0,0,.35deg);
+    box-shadow:0 18px 50px rgba(0,0,0,.35);
+}
+
+.post.pinned {
+    border:2px solid var(--accent);
+    box-shadow:0 0 22px rgba(89,107,255,.55);
+}
+
+.post img {
+    width:160px; height:160px;
+    object-fit:cover; border-radius:12px;
+    float:right; margin-left:15px;
+}
+
+.post-title {
+    font-size:24px;
+    margin-bottom:12px;
+    font-weight:600;
+}
+
+.tags {
+    display:flex; gap:8px; margin-bottom:8px;
+}
+.tag {
+    background:var(--accent);
+    color:#fff;
+    padding:4px 10px;
+    border-radius:7px;
+    font-size:13px;
+    transition:.24s ease;
+}
+.tag:hover { transform:scale(1.1); }
+
+.date {
+    margin-top:12px;
+    opacity:.7;
+    font-size:13px;
+}
+
+.fullscreen {
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    backdrop-filter:blur(12px);
+    display:none; justify-content:center;
+    padding:20px;
+    z-index:100;
+}
+.fullscreen-inner {
+    max-width:850px;
     width:100%;
-    height:180px;
-  }
-  .entry-body{
-    font-size:14px;
-  }
-  .feed-wrap{
-    padding:14px 10px 18px;
-    border-radius:20px;
-  }
+    background:inherit;
+    padding:40px 28px;
+    border-radius:16px;
+    animation:modalPop .35s cubic-bezier(.16,1,.3,1);
 }
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{
-    animation:none!important;
-    transition:none!important;
-  }
+@keyframes modalPop {
+    0% {transform:scale(.8) translateY(20px); opacity:0;}
+    100% {transform:scale(1) translateY(0); opacity:1;}
+}
+
+.close {
+    position:absolute;
+    top:18px; right:22px;
+    font-size:32px;
+    cursor:pointer;
+    opacity:.7;
+}
+.close:hover { opacity:1; }
+
+@media(max-width:768px) {
+    .post img {
+        width:100%; height:220px;
+        float:none; margin:0 0 10px;
+    }
 }
 </style>
 </head>
+
 <body>
-<div class="header" id="topBar">
-  <div class="brand">
-    <div class="brand-avatar">
-      <div class="brand-avatar-inner"></div>
-      <div class="brand-dot"></div>
-    </div>
-    <span>rousev.space</span>
-  </div>
-  <div class="header-right">
-    <div class="icon-button" data-link="https://youtube.com/@RousevGuesses" title="YouTube">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2C19.5 3.7 12 3.7 12 3.7S4.5 3.7 2.6 4.2A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.5 15.6V8.4L15.8 12 9.5 15.6z"></path></svg>
-    </div>
-    <div class="icon-button" data-popup="discord" title="Discord">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.3 4.4a19 19 0 0 0-4.3-1.3l-.4.8a17 17 0 0 0-3.4-.4 17 17 0 0 0-3.4.4l-.4-.8a19 19 0 0 0-4.3 1.3A17.7 17.7 0 0 0 2 18.1l.1.1a13 13 0 0 0 4.2 2.1l.3-.6a8 8 0 0 1-1.3-.7l.3-.2a12 12 0 0 0 11 0l.3.2a8 8 0 0 1-1.3.7l.3.6a13 13 0 0 0 4.2-2.1l.1-.1a17.6 17.6 0 0 0-3-13.7zM9.2 14.5c-.8 0-1.5-.8-1.5-1.7s.6-1.7 1.5-1.7c.8 0 1.5.8 1.5 1.7s-.7 1.7-1.5 1.7zm5.6 0c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7z"></path></svg>
-    </div>
-    <div class="icon-button" data-popup="email" title="Email">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 2v.2l9 5.3 9-5.3V6H3zm0 2.9V18h18V8.9l-8.4 5a2 2 0 0 1-2 0L3 8.9z"></path></svg>
-    </div>
-    <div class="icon-button" id="themeToggle" title="Toggle theme">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a1 1 0 0 1 1 1v1.2a1 1 0 1 1-2 0V4a1 1 0 0 1 1-1zm0 13.8A4.8 4.8 0 1 1 12 7a6 6 0 1 0 0 12 1 1 0 0 0 0-2.2zM4 11a1 1 0 0 1 1-1h1.2a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1zm12.8 0a1 1 0 0 1 1-1H19a1 1 0 1 1 0 2h-1.2a1 1 0 0 1-1-1zM7 6a1 1 0 0 1 1.4 0l.9.9a1 1 0 0 1-1.3 1.4L7 7.4A1 1 0 0 1 7 6zm8.7 8.7a1 1 0 0 1 1.4 0l.9.9a1 1 0 1 1-1.4 1.4l-.9-.9a1 1 0 0 1 0-1.4zM6 16.3a1 1 0 0 1 1.4 0l.9.9a1 1 0 0 1-1.4 1.4l-.9-.9A1 1 0 0 1 6 16.3zm10.6-9.9a1 1 0 0 1 1.4 1.4l-.9.9a1 1 0 0 1-1.4-1.4l.9-.9z"></path></svg>
-    </div>
-    <div class="sort-shell">
-      <button class="sort-trigger" id="sortTrigger">
-        <span class="sort-label" id="sortLabel">Default</span>
-        <span class="sort-chevron">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9l5 6 5-6H7z"></path></svg>
-        </span>
-      </button>
-      <div class="sort-menu" id="sortMenu">
-        <div class="sort-item active" data-mode="default"><span>Default order</span><span></span></div>
-        <div class="sort-item" data-mode="date"><span>By date</span><span>new → old</span></div>
-        <div class="sort-item" data-mode="random"><span>Random</span><span></span></div>
-        <div class="sort-item" data-mode="length"><span>By length</span><span id="lengthDirLabel">short → long</span></div>
-        <div class="sort-item" data-mode="tag"><span>By tag</span><span>press Enter</span></div>
-        <input class="sort-tag-input" id="tagInput" placeholder="filter by tag...">
-      </div>
-    </div>
-  </div>
-</div>
 
-<div class="app-shell">
-  <section class="hero">
-    <div class="hero-title">little vault of experiments</div>
-    <div class="hero-sub">Pieces loaded from <code>./Posts</code> next to this file. Same format you used, better outfit.</div>
-  </section>
-
-  <section class="feed-wrap">
-    <div class="feed-glow"></div>
-    <div class="entry-list" id="entryList">
-      <article class="entry-card skeleton">
-        <div class="entry-main">
-          <div class="entry-title-row">
-            <div class="entry-title"></div>
-          </div>
-          <div class="entry-body"></div>
-          <div class="entry-tags"></div>
-          <div class="entry-meta"></div>
+<div class="top">
+    <div class="headerText">I bought the whole domain, I'm going to use the whole domain</div>
+    <div style="display:flex;gap:15px;align-items:center;">
+        <div class="sort">
+            <svg class="icon" id="sortBtn" viewBox="0 0 24 24">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="15" y2="12"/>
+                <line x1="3" y1="18" x2="9" y2="18"/>
+            </svg>
+            <div class="sort-menu" id="sortMenu">
+                <div class="sort-option" data-sort="date">🕓 Newest First</div>
+                <div class="sort-option" data-sort="random">🔀 Shuffle</div>
+                <div class="sort-option" data-sort="length">📏 Length</div>
+                <div class="sort-option" data-sort="tag">🏷️ Tag</div>
+            </div>
         </div>
-        <div class="entry-media"></div>
-      </article>
-      <article class="entry-card skeleton">
-        <div class="entry-main">
-          <div class="entry-title-row">
-            <div class="entry-title"></div>
-          </div>
-          <div class="entry-body"></div>
-          <div class="entry-tags"></div>
-          <div class="entry-meta"></div>
-        </div>
-        <div class="entry-media"></div>
-      </article>
+
+        <svg class="icon" id="discord" viewBox="0 0 24 24">
+            <path d="M20 4s-2-1-5-1l-.5 1.3a14.7 14.7 0 0 0-2.5-.3c-1 0-1.8.2-2.5.3L9 3C6 3 4 4 4 4S2 9 2 14c3 3 7 3 7 3l1-2s-1.2-.6-2-.9l-.2-.3s.4-.1.8.1c2 1.4 6 1.4 8 0 .4-.2.8-.1.8-.1l-.2.3c-.8.3-2 .9-2 .9l1 2s4 0 7-3c0-5-2-10-2-10z"/>
+        </svg>
+
+        <svg class="icon" id="themeToggle" viewBox="0 0 24 24">
+            <path d="M12 3a9 9 0 1 0 9 9A7 7 0 0 1 12 3z"/>
+        </svg>
     </div>
-  </section>
 </div>
 
-<div class="detail-overlay" id="detailOverlay">
-  <div class="detail-panel" id="detailPanel">
-    <div class="detail-header">
-      <div>
-        <div class="detail-title" id="detailTitle"></div>
-        <div class="detail-tags" id="detailTags"></div>
-      </div>
-      <div class="detail-close" id="detailClose" aria-label="Close">×</div>
-    </div>
-    <div class="detail-media" id="detailMedia" style="display:none;"></div>
-    <div class="detail-body" id="detailBody"></div>
-    <div class="detail-footer">
-      <div class="detail-date" id="detailDate"></div>
-      <div class="detail-badge">fullscreen view</div>
-    </div>
-  </div>
-</div>
+<div class="container"><div id="posts"></div></div>
 
-<div class="detail-overlay" id="smallPopup">
-  <div class="detail-panel" style="max-width:360px;">
-    <div class="detail-header">
-      <div class="detail-title" id="popupTitle"></div>
-      <div class="detail-close" id="popupClose">×</div>
-    </div>
-    <div class="detail-body" id="popupBody"></div>
-  </div>
+<div id="modal" class="fullscreen">
+    <div class="fullscreen-inner" id="modalContent"></div>
+    <div class="close" onclick="closeModal()">×</div>
 </div>
 
 <script>
-(function(){
-  const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const stored = localStorage.getItem("rousev-theme");
-  const initialDark = stored ? stored === "dark" : prefersDark;
-  if(initialDark) document.body.classList.add("dark");
-  const themeToggle = document.getElementById("themeToggle");
-  themeToggle.addEventListener("click",function(){
-    document.body.classList.toggle("dark");
-    localStorage.setItem("rousev-theme",document.body.classList.contains("dark")?"dark":"light");
-  });
+let allPosts = [];
+let sortMode = "date";
 
-  const contactPopup = document.getElementById("smallPopup");
-  const popupTitle = document.getElementById("popupTitle");
-  const popupBody = document.getElementById("popupBody");
-  const popupClose = document.getElementById("popupClose");
-  function openPopup(type){
-    if(type==="discord"){
-      popupTitle.textContent = "Discord";
-      popupBody.textContent = "@brousev";
-    }else if(type==="email"){
-      popupTitle.textContent = "Email";
-      popupBody.textContent = "contact@rousev.com";
-    }
-    contactPopup.classList.add("open");
-  }
-  popupClose.addEventListener("click",function(){contactPopup.classList.remove("open");});
-  contactPopup.addEventListener("click",function(e){if(e.target===contactPopup) contactPopup.classList.remove("open");});
+document.getElementById("themeToggle").onclick=()=>document.body.classList.toggle("dark");
+document.getElementById("sortBtn").onclick=()=>document.getElementById("sortMenu").classList.toggle("show");
 
-  document.querySelectorAll(".icon-button").forEach(function(b){
-    const url = b.getAttribute("data-link");
-    const popup = b.getAttribute("data-popup");
-    if(url){
-      b.addEventListener("click",function(){window.open(url,"_blank","noopener");});
-    }else if(popup){
-      b.addEventListener("click",function(){openPopup(popup);});
-    }
-  });
-
-  let lastScroll = window.pageYOffset || 0;
-  const topBar = document.getElementById("topBar");
-  window.addEventListener("scroll",function(){
-    const y = window.pageYOffset || 0;
-    if(y <= 4){
-      topBar.classList.remove("hidden");
-    }else if(y > lastScroll + 5){
-      topBar.classList.add("hidden");
-    }else if(y < lastScroll - 5){
-      topBar.classList.remove("hidden");
-    }
-    lastScroll = y;
-  },{passive:true});
-
-  function escapeHtml(str){
-    return str.replace(/[&<>"']/g,function(c){
-      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
-    });
-  }
-  function linkify(text){
-    return text.replace(/(https?:\/\/[^\s]+)/g,function(url){
-      try{
-        const u = new URL(url);
-        let label = u.hostname.replace(/^www\./,"");
-        if(u.pathname && u.pathname !== "/") label += u.pathname;
-        return '<a class="linkified" href="'+escapeHtml(url)+'" target="_blank" rel="noopener noreferrer">'+escapeHtml(label)+'</a>';
-      }catch(e){
-        return escapeHtml(url);
-      }
-    });
-  }
-  function processInlineImages(text){
-    return text
-      .replace(/\[\$\/\/image:(.*?)\/\/\]/gi,function(_,path){
-        return '<img class="inline-icon" src="'+escapeHtml(path.trim())+'" alt="">';
-      })
-      .replace(/\[\$\/\/url:(.*?)\/\/\]/gi,function(_,path){
-        return '<img class="inline-icon" src="'+escapeHtml(path.trim())+'" alt="">';
-      });
-  }
-  function extractDate(lines){
-    let idx = lines.length-1;
-    while(idx>0 && !lines[idx].trim()) idx--;
-    const last = lines[idx].trim();
-    const m = last.match(/\/\[(\d{2})\.(\d{2})\.(\d{4})\]\//);
-    if(!m) return {date:null,lines};
-    const d = new Date(parseInt(m[3],10),parseInt(m[2],10)-1,parseInt(m[1],10));
-    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    const day = d.getDate();
-    let suf = "th";
-    if(day%10===1 && day%100!==11) suf="st";
-    else if(day%10===2 && day%100!==12) suf="nd";
-    else if(day%10===3 && day%100!==13) suf="rd";
-    const display = day+suf+" of "+months[d.getMonth()]+" "+d.getFullYear();
-    lines = lines.slice(0,idx);
-    return {date:{display,time:d.getTime()},lines};
-  }
-  function parseTitle(raw){
-    let title = raw;
-    let image = null;
-    const im = raw.match(/\[\$\/\/(image|url):(.*?)\/\/\]/i);
-    if(im){
-      image = im[2].trim();
-      title = title.replace(im[0],"").trim();
-    }
-    const tagMatches = title.match(/\/#([^\/]+)\//g) || [];
-    const tags = tagMatches.map(function(t){return t.slice(2,-1).trim();});
-    title = title.replace(/\/#([^\/]+)\//g,"").trim();
-    return {title,image,tags};
-  }
-  function parseEntry(text,index){
-    const normalized = text.replace(/\r\n/g,"\n").trim();
-    if(!normalized) return null;
-    const lines = normalized.split("\n");
-    const first = lines[0] || "";
-    const {title,image,tags} = parseTitle(first);
-    const rest = lines.slice(1);
-    const d = extractDate(rest);
-    const bodyRaw = d.lines.join("\n").trim();
-    return {
-      index:index,
-      title:title || "(untitled)",
-      image:image,
-      tags:tags,
-      date:d.date,
-      body:bodyRaw
-    };
-  }
-
-  const entries = [];
-  const listEl = document.getElementById("entryList");
-  const isFinePointer = window.matchMedia && window.matchMedia("(pointer:fine)").matches;
-  const isMobile = "ontouchstart" in window || navigator.maxTouchPoints > 2;
-
-  function clearSkeleton(){
-    listEl.innerHTML = "";
-  }
-
-  function buildEntryCard(entry){
-    const card = document.createElement("article");
-    card.className = "entry-card";
-    card.dataset.index = entry.index;
-    const main = document.createElement("div");
-    main.className = "entry-main";
-    const titleRow = document.createElement("div");
-    titleRow.className = "entry-title-row";
-    const titleEl = document.createElement("div");
-    titleEl.className = "entry-title";
-    titleEl.textContent = entry.title;
-    const tagsEl = document.createElement("div");
-    tagsEl.className = "entry-tags";
-    entry.tags.forEach(function(tag){
-      const t = document.createElement("button");
-      t.type = "button";
-      t.className = "entry-tag";
-      t.textContent = tag;
-      t.addEventListener("click",function(ev){
-        ev.stopPropagation();
-        tagInput.value = tag;
-        currentMode = "tag";
-        applySortActive();
-        renderEntries();
-      });
-      tagsEl.appendChild(t);
-    });
-    const bodyEl = document.createElement("div");
-    bodyEl.className = "entry-body";
-    const processed = processInlineImages(linkify(escapeHtml(entry.body)));
-    bodyEl.innerHTML = processed;
-    const metaEl = document.createElement("div");
-    metaEl.className = "entry-meta";
-    const dateEl = document.createElement("div");
-    dateEl.className = "entry-date";
-    if(entry.date) dateEl.textContent = entry.date.display;
-    const badgeEl = document.createElement("div");
-    badgeEl.className = "entry-badge";
-    badgeEl.textContent = "tap to open";
-    metaEl.appendChild(dateEl);
-    metaEl.appendChild(badgeEl);
-
-    titleRow.appendChild(titleEl);
-    main.appendChild(titleRow);
-    if(entry.tags.length) main.appendChild(tagsEl);
-    if(entry.body) main.appendChild(bodyEl);
-    main.appendChild(metaEl);
-
-    card.appendChild(main);
-
-    if(entry.image){
-      const media = document.createElement("div");
-      media.className = "entry-media";
-      const img = document.createElement("img");
-      img.src = entry.image;
-      img.alt = "";
-      media.appendChild(img);
-      card.appendChild(media);
-    }
-
-    card.addEventListener("click",function(){
-      openDetail(entry);
-    });
-
-    if(isFinePointer){
-      card.addEventListener("mousemove",function(e){
-        const rect = card.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        const rotX = y * -10;
-        const rotY = x * 10;
-        card.style.transform = "perspective(900px) translateY(-4px) rotateX("+rotX+"deg) rotateY("+rotY+"deg)";
-      });
-      card.addEventListener("mouseleave",function(){
-        card.style.transform = "perspective(900px) translateY(0) rotateX(0) rotateY(0)";
-      });
-    }
-
-    return card;
-  }
-
-  const detailOverlay = document.getElementById("detailOverlay");
-  const detailTitle = document.getElementById("detailTitle");
-  const detailTags = document.getElementById("detailTags");
-  const detailBody = document.getElementById("detailBody");
-  const detailDate = document.getElementById("detailDate");
-  const detailMedia = document.getElementById("detailMedia");
-  const detailClose = document.getElementById("detailClose");
-
-  function openDetail(entry){
-    detailTitle.textContent = entry.title;
-    detailTags.innerHTML = "";
-    entry.tags.forEach(function(tag){
-      const span = document.createElement("span");
-      span.className = "entry-tag";
-      span.textContent = tag;
-      span.addEventListener("click",function(ev){
-        ev.stopPropagation();
-        detailOverlay.classList.remove("open");
-        tagInput.value = tag;
-        currentMode = "tag";
-        applySortActive();
-        renderEntries();
-      });
-      detailTags.appendChild(span);
-    });
-    const processed = processInlineImages(linkify(escapeHtml(entry.body)));
-    detailBody.innerHTML = processed;
-    if(entry.date){
-      detailDate.textContent = entry.date.display;
-    }else{
-      detailDate.textContent = "";
-    }
-    if(entry.image){
-      detailMedia.style.display = "block";
-      detailMedia.innerHTML = '<img src="'+escapeHtml(entry.image)+'" alt="">';
-    }else{
-      detailMedia.style.display = "none";
-      detailMedia.innerHTML = "";
-    }
-    detailOverlay.classList.add("open");
-  }
-  detailClose.addEventListener("click",function(){detailOverlay.classList.remove("open");});
-  detailOverlay.addEventListener("click",function(e){
-    if(e.target === detailOverlay) detailOverlay.classList.remove("open");
-  });
-  document.addEventListener("keydown",function(e){
-    if(e.key === "Escape"){
-      if(detailOverlay.classList.contains("open")) detailOverlay.classList.remove("open");
-      if(contactPopup.classList.contains("open")) contactPopup.classList.remove("open");
-    }
-  });
-
-  let currentMode = "default";
-  let lengthAsc = true;
-  const sortLabel = document.getElementById("sortLabel");
-  const sortTrigger = document.getElementById("sortTrigger");
-  const sortMenu = document.getElementById("sortMenu");
-  const tagInput = document.getElementById("tagInput");
-  const lengthDirLabel = document.getElementById("lengthDirLabel");
-
-  function applySortActive(){
-    document.querySelectorAll(".sort-item").forEach(function(i){
-      i.classList.toggle("active",i.getAttribute("data-mode") === currentMode || (currentMode.startsWith("length") && i.getAttribute("data-mode")==="length"));
-    });
-    if(currentMode==="default") sortLabel.textContent = "Default";
-    else if(currentMode==="date") sortLabel.textContent = "Date";
-    else if(currentMode==="random") sortLabel.textContent = "Random";
-    else if(currentMode.indexOf("length")===0) sortLabel.textContent = lengthAsc ? "Length ↑" : "Length ↓";
-    else if(currentMode==="tag") sortLabel.textContent = "Tag";
-  }
-  sortTrigger.addEventListener("click",function(e){
-    e.stopPropagation();
-    sortMenu.classList.toggle("open");
-  });
-  document.addEventListener("click",function(){
-    sortMenu.classList.remove("open");
-  });
-  document.querySelectorAll(".sort-item").forEach(function(item){
-    item.addEventListener("click",function(e){
-      const mode = item.getAttribute("data-mode");
-      if(mode === "length"){
-        lengthAsc = !lengthAsc;
-        currentMode = lengthAsc ? "length-asc" : "length-desc";
-        lengthDirLabel.textContent = lengthAsc ? "short → long" : "long → short";
-      }else if(mode === "tag"){
-        currentMode = "tag";
-        tagInput.focus();
-      }else{
-        currentMode = mode;
-      }
-      applySortActive();
-      sortMenu.classList.remove("open");
-      renderEntries();
-      e.stopPropagation();
-    });
-  });
-  tagInput.addEventListener("keydown",function(e){
-    if(e.key === "Enter"){
-      currentMode = "tag";
-      applySortActive();
-      sortMenu.classList.remove("open");
-      renderEntries();
-    }
-  });
-
-  function sortedEntriesBase(){
-    const arr = entries.slice();
-    if(currentMode === "default"){
-      arr.sort(function(a,b){return a.index - b.index;});
-    }else if(currentMode === "date"){
-      arr.sort(function(a,b){
-        if(a.date && b.date) return b.date.time - a.date.time;
-        if(a.date && !b.date) return -1;
-        if(!a.date && b.date) return 1;
-        return a.index - b.index;
-      });
-    }else if(currentMode === "random"){
-      arr.sort(function(){return Math.random() - 0.5;});
-    }else if(currentMode === "length-asc" || currentMode === "length-desc"){
-      arr.sort(function(a,b){
-        const la = a.body.length;
-        const lb = b.body.length;
-        return currentMode === "length-asc" ? la - lb : lb - la;
-      });
-    }else if(currentMode === "tag"){
-      const value = tagInput.value.trim().toLowerCase();
-      if(value){
-        return arr.filter(function(e){
-          return e.tags.some(function(t){return t.toLowerCase().indexOf(value) !== -1;});
-        }).sort(function(a,b){return a.index - b.index;});
-      }
-    }
-    return arr;
-  }
-
-  function renderEntries(){
-    clearSkeleton();
-    let arr = sortedEntriesBase();
-    if(currentMode !== "tag"){
-      const value = tagInput.value.trim().toLowerCase();
-      if(value){
-        arr = arr.filter(function(e){
-          return e.tags.some(function(t){return t.toLowerCase().indexOf(value) !== -1;});
-        });
-      }
-    }
-    if(!arr.length){
-      const empty = document.createElement("div");
-      empty.style.padding = "18px 6px 8px";
-      empty.style.fontSize = "13px";
-      empty.style.opacity = "0.7";
-      empty.textContent = "No entries found for whatever you just asked for.";
-      listEl.appendChild(empty);
-      return;
-    }
-    arr.forEach(function(entry){
-      listEl.appendChild(buildEntryCard(entry));
-    });
-  }
-
-  async function fetchText(path){
+async function loadPosts(){
+    let pin=null;
     try{
-      const res = await fetch(path,{cache:"no-cache"});
-      if(res.ok) return await res.text();
-    }catch(e){}
-    return null;
-  }
+        let r=await fetch("./Posts/IMPORTANT.txt");
+        if(r.ok) pin={number:-1,content:await r.text(),pinned:true};
+    }catch{}
 
-  async function loadEntries(){
-    let idx = 1;
+    let i=1;
     while(true){
-      const p1 = "./Posts/Thing_"+idx+".txt";
-      const p2 = "./posts/Thing_"+idx+".txt";
-      let content = await fetchText(p1);
-      if(content === null) content = await fetchText(p2);
-      if(content === null) break;
-      const parsed = parseEntry(content,idx);
-      if(parsed) entries.push(parsed);
-      idx++;
+        let r=await fetch("./Posts/Thing_"+i+".txt");
+        if(!r.ok) break;
+        allPosts.push({number:i,content:await r.text()});
+        i++;
     }
-    if(entries.length === 0){
-      const demo = "Example entry /#demo/ /#placeholder/\nNothing in ./Posts yet, so this is a fake one.\nPaste files like Thing_1.txt next to index.html and it will replace this.\n/[01.01.2025]/";
-      const parsed = parseEntry(demo,1);
-      if(parsed) entries.push(parsed);
-    }
-    renderEntries();
-  }
+    if(pin) allPosts.unshift(pin);
+    sortPosts();
+}
 
-  loadEntries();
+function extractDate(c){
+    let m=c.match(/\\[(\\d{2})\\.(\\d{2})\\.(\\d{4})\\]/);
+    if(!m) return new Date(0);
+    return new Date(+m[3],+m[2]-1,+m[1]);
+}
 
-  if(isMobile && !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
-    let ticking = false;
-    function updateParallax(){
-      const cards = document.querySelectorAll(".entry-card");
-      const vh = window.innerHeight;
-      cards.forEach(function(card){
-        const rect = card.getBoundingClientRect();
-        const center = rect.top + rect.height / 2;
-        const dist = (center - vh/2) / (vh/2);
-        const offset = Math.max(Math.min(dist,1),-1);
-        const translate = -8 * offset;
-        const scale = 1 - Math.abs(offset) * 0.03;
-        card.style.transform = "translateY("+translate+"px) scale("+scale.toFixed(3)+")";
-      });
-      ticking = false;
-    }
-    window.addEventListener("scroll",function(){
-      if(!ticking){
-        window.requestAnimationFrame(updateParallax);
-        ticking = true;
-      }
-    },{passive:true});
-    updateParallax();
-  }
-})();
+function contentLen(c){
+    return c.split("\\n").slice(1).join("").length;
+}
+
+function sortPosts(){
+    if(sortMode==="date") allPosts.sort((a,b)=>extractDate(b.content)-extractDate(a.content));
+    if(sortMode==="random") allPosts.sort(()=>Math.random()-.5);
+    if(sortMode==="length") allPosts.sort((a,b)=>contentLen(b.content)-contentLen(a.content));
+    displayPosts();
+}
+
+function extractTags(t){
+    return (t.match(/\\/#[^\\/]+\\//g)||[]).map(x=>x.replace(/[\\/#]/g,""));
+}
+
+function cleanTitle(l){
+    return l.replace(/\\[\\$\\/.*?\\/\\]/g,"").replace(/\\/#[^\\/]+\\//g,"").trim();
+}
+
+function displayPosts(){
+    let box=document.getElementById("posts");
+    box.innerHTML="";
+    allPosts.forEach(p=>{
+        let L=p.content.split("\\n");
+        let title=cleanTitle(L[0]);
+        let tags=extractTags(L[0]);
+        let imgMatch=L[0].match(/\\[\\$\\/url:(.*?)\\/\\]/);
+        let img=imgMatch?imgMatch[1]:null;
+        let raw=L.slice(1).join("\\n");
+        let d=extractDate(p.content);
+        let dateStr=d>0?d.toLocaleDateString(): "";
+
+        let div=document.createElement("div");
+        div.className="post";
+        if(p.pinned) div.classList.add("pinned");
+
+        div.innerHTML=`
+            ${img?`<img src=\"${img}\">`:""}
+            <div class='post-title'>${title}</div>
+            <div class='tags'>${tags.map(t=>`<div class='tag'>${t}</div>`).join("")}</div>
+            <div class='date'>${dateStr}</div>
+        `;
+        div.onclick=()=>openModal(title,raw,dateStr);
+        box.append(div);
+    });
+}
+
+function openModal(title,raw,date){
+    let m=document.getElementById("modalContent");
+    m.innerHTML=`<h2>${title}</h2><div style='white-space:pre-wrap;margin-top:18px;font-size:17px;'>${process(raw)}</div><div style='margin-top:14px;opacity:.65;'>${date}</div>`;
+    document.getElementById("modal").style.display="flex";
+}
+function closeModal(){document.getElementById("modal").style.display="none";}
+function process(t){return t.replace(/https?:\\/\\/[^\\s]+/g,u=>`<a href='${u}' target='_blank'>${u}</a>`);}
+
+document.querySelectorAll(".sort-option").forEach(o=>{
+    o.onclick=()=>{
+        sortMode=o.dataset.sort;
+        sortPosts();
+        document.getElementById("sortMenu").classList.remove("show");
+    };
+});
+
+loadPosts();
 </script>
 </body>
 </html>
