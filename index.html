@@ -3,896 +3,288 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rousev Domain Abuse</title>
+<title>I bought the whole domain</title>
+
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  color-scheme:light dark;
-  --bg-light-top:#f9fafc;
-  --bg-light-bottom:#e8e9f2;
-  --bg-dark-top:#050711;
-  --bg-dark-bottom:#04050b;
-  --surface-light:rgba(255,255,255,0.9);
-  --surface-dark:rgba(14,16,32,0.96);
-  --accent:#5865f2;
-  --accent-soft:#8891ff;
-  --velvet:#b5163c;
-  --text-light:#151623;
-  --text-dark:#f4f5ff;
-  --muted-light:rgba(20,24,48,0.7);
-  --muted-dark:rgba(225,228,255,0.72);
-  --border-light:rgba(40,40,80,0.12);
-  --border-dark:rgba(170,180,255,0.25);
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --accent:#596BFF;
+    --bg-light:#fafbfc;
+    --bg-dark:#0f1116;
+    --text-light:#1a1a1a;
+    --text-dark:#eaeaea;
+    --post-light1:rgba(255,255,255,.6);
+    --post-light2:rgba(0,0,0,.08);
+    --post-dark1:#1a1e28;
+    --post-dark2:#090c10;
 }
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
 body{
-  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  min-height:100vh;
-  padding-top:64px;
-  background:
-    radial-gradient(circle at 0 0,rgba(255,255,255,0.9) 0,transparent 45%),
-    radial-gradient(circle at 100% 0,rgba(255,230,250,0.9) 0,transparent 45%),
-    linear-gradient(to bottom,var(--bg-light-top),var(--bg-light-bottom));
-  background-attachment:fixed;
-  color:var(--text-light);
-  -webkit-font-smoothing:antialiased;
-  transition:background .4s,color .3s;
+    font-family:Inter,sans-serif;
+    background:var(--bg-light);
+    color:var(--text-light);
+    padding-top:65px;
+    transition:.3s ease;
 }
 body.dark{
-  background:
-    radial-gradient(circle at 0 0,rgba(88,101,242,0.45) 0,transparent 52%),
-    radial-gradient(circle at 100% 0,rgba(181,21,71,0.55) 0,transparent 55%),
-    linear-gradient(to bottom,var(--bg-dark-top),var(--bg-dark-bottom));
-  color:var(--text-dark);
+    background:var(--bg-dark);
+    color:var(--text-dark);
 }
-.top-bar{
-  position:fixed;
-  top:0;left:0;right:0;
-  height:64px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 20px;
-  background:linear-gradient(to bottom,rgba(255,255,255,0.9),rgba(248,248,255,0.88));
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border-light);
-  z-index:40;
-  transition:transform .25s ease,background .35s ease,border-color .35s ease;
+
+/******** Header ********/
+.top{
+    position:fixed;top:0;left:0;width:100%;height:60px;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:0 18px;backdrop-filter:blur(18px);
+    z-index:40;
+    border-bottom:1px solid rgba(255,255,255,.05);
 }
-body.dark .top-bar{
-  background:linear-gradient(to bottom,rgba(5,7,18,0.96),rgba(4,5,14,0.94));
-  border-bottom-color:var(--border-dark);
+
+.tools{
+    display:flex;
+    gap:10px;
+    align-items:center;
 }
-.top-bar.hidden{transform:translateY(-100%)}
-.top-left,.top-right{display:flex;align-items:center;gap:14px}
-.top-title{
-  font-size:16px;
-  font-weight:600;
-  letter-spacing:-0.03em;
+
+.tool{
+    width:28px;
+    height:28px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    transition:.2s ease;
+    color:inherit;
 }
-.icon-link{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:30px;
-  height:30px;
-  border-radius:999px;
-  border:1px solid rgba(40,40,80,0.18);
-  background:radial-gradient(circle at 30% 0,rgba(255,255,255,0.95),rgba(238,239,255,0.9));
-  cursor:pointer;
-  transition:transform .16s ease,box-shadow .2s ease,border-color .18s ease,background .25s ease;
+.tool:hover{
+    color:var(--accent);
+    transform:scale(1.12);
 }
-body.dark .icon-link{
-  background:radial-gradient(circle at 30% 0,rgba(35,38,80,0.97),rgba(15,18,40,0.98));
-  border-color:rgba(190,200,255,0.35);
+.tool svg{
+    width:22px;
+    height:22px;
+    fill:currentColor;
 }
-.icon-link svg{
-  width:18px;height:18px;
-  fill:currentColor;
-  color:inherit;
-  opacity:.8;
-  transition:opacity .15s ease,transform .15s ease;
+
+/******** Posts ********/
+.container{
+    max-width:920px;
+    margin:0 auto;
+    padding:30px 20px;
 }
-.icon-link:hover{
-  transform:translateY(-1px) scale(1.07);
-  box-shadow:0 12px 26px rgba(0,0,0,0.25);
-  border-color:var(--accent);
+
+.post{
+    padding:26px;
+    margin-bottom:28px;
+    border-radius:14px;
+    background:linear-gradient(to bottom,var(--post-light1),var(--post-light2));
+    cursor:pointer;
+    transition:.25s ease;
 }
-.icon-link:hover svg{opacity:1;transform:translateY(-.5px)}
-.icon-link:active{transform:translateY(0) scale(.97);box-shadow:0 4px 10px rgba(0,0,0,0.25)}
-.sort-shell{position:relative}
-.sort-button{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  padding:6px 11px;
-  border-radius:999px;
-  border:1px solid rgba(40,40,80,0.16);
-  background:linear-gradient(to bottom,rgba(255,255,255,0.97),rgba(240,241,255,0.95));
-  font-size:12px;
-  font-weight:500;
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  cursor:pointer;
-  transition:transform .14s ease,box-shadow .22s ease,border-color .18s ease,background .25s ease;
+body.dark .post{
+    background:linear-gradient(to bottom,var(--post-dark1),var(--post-dark2));
 }
-body.dark .sort-button{
-  background:linear-gradient(to bottom,rgba(18,21,48,0.98),rgba(10,13,30,0.98));
-  border-color:rgba(185,195,255,0.35);
+.post:hover{
+    transform:translateY(-4px) scale(1.02);
+    box-shadow:0 14px 36px rgba(0,0,0,.32);
 }
-.sort-button span{opacity:.7}
-.sort-button svg{width:15px;height:15px;fill:currentColor}
-.sort-button:hover{
-  transform:translateY(-1px);
-  box-shadow:0 12px 30px rgba(0,0,0,0.3);
-  border-color:var(--accent);
+.post.pinned{
+    border:2px solid var(--accent);
+    box-shadow:0 0 14px rgba(89,107,255,.4);
 }
-.sort-menu{
-  position:absolute;
-  top:120%;
-  right:0;
-  min-width:210px;
-  padding:8px;
-  border-radius:14px;
-  border:1px solid var(--border-light);
-  background:linear-gradient(to bottom,rgba(255,255,255,0.98),rgba(244,244,255,0.98));
-  box-shadow:0 20px 55px rgba(8,8,40,0.55);
-  opacity:0;
-  transform:translateY(-6px);
-  pointer-events:none;
-  transition:opacity .18s ease,transform .18s ease,border-color .3s ease,background .3s ease;
-  z-index:50;
+.post img{
+    width:160px;height:160px;border-radius:12px;
+    float:right;margin-left:16px;object-fit:cover;
 }
-body.dark .sort-menu{
-  background:linear-gradient(to bottom,rgba(10,11,25,0.98),rgba(7,9,20,0.99));
-  border-color:var(--border-dark);
+.post-title{font-size:22px;font-weight:600;margin-bottom:10px;}
+.tags{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.tag{
+    background:var(--accent);
+    font-size:13px;
+    color:#fff;
+    padding:4px 9px;
+    border-radius:6px;
 }
-.sort-menu.show{
-  opacity:1;
-  transform:translateY(0);
-  pointer-events:auto;
+.date{font-size:13px;opacity:.65;margin-top:12px;}
+
+/******** Modal Popup ********/
+.fullscreen{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,.6);
+    backdrop-filter:blur(14px);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    padding:22px;
+    z-index:100;
 }
-.sort-item{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:7px 9px;
-  border-radius:9px;
-  font-size:13px;
-  cursor:pointer;
-  transition:background .15s ease,transform .12s ease,color .15s ease;
+.fullscreen-inner{
+    max-width:850px;width:100%;
+    background:inherit;
+    padding:35px 26px;
+    border-radius:14px;
+    animation:popup .35s cubic-bezier(.16,1,.3,1);
 }
-.sort-item:hover{
-  background:linear-gradient(to right,rgba(88,101,242,0.13),rgba(181,22,85,0.13));
-  transform:translateY(-1px);
+@keyframes popup{
+    0%{opacity:0;transform:scale(.8) translateY(20px);}
+    100%{opacity:1;transform:scale(1) translateY(0);}
 }
-.sort-item.active{
-  background:linear-gradient(135deg,rgba(88,101,242,0.32),rgba(181,22,85,0.3));
+.close{
+    position:absolute;top:12px;right:18px;
+    font-size:30px;cursor:pointer;opacity:.7;
 }
-.sort-tag-input{
-  width:100%;
-  margin-top:6px;
-  padding:6px 9px;
-  border-radius:9px;
-  border:1px solid rgba(60,60,120,0.3);
-  font-size:12px;
-  background:linear-gradient(to bottom,rgba(255,255,255,0.97),rgba(244,244,255,0.97));
-  outline:none;
-  color:inherit;
-}
-body.dark .sort-tag-input{
-  background:linear-gradient(to bottom,rgba(16,18,36,0.97),rgba(8,10,24,0.97));
-  border-color:rgba(185,195,255,0.45);
-}
-.app-shell{
-  max-width:960px;
-  margin:0 auto;
-  padding:26px 16px 40px;
-}
-.feed{
-  margin-top:6px;
-  padding:18px 14px 20px;
-  border-radius:24px;
-  border:1px solid var(--border-light);
-  background:
-    radial-gradient(circle at 0 0,rgba(88,101,242,0.18),transparent 60%),
-    radial-gradient(circle at 100% 0,rgba(181,22,85,0.2),transparent 60%),
-    linear-gradient(to bottom,var(--surface-light),rgba(239,240,255,0.95));
-  box-shadow:0 20px 50px rgba(10,10,40,0.25);
-  position:relative;
-  overflow:hidden;
-}
-body.dark .feed{
-  background:
-    radial-gradient(circle at 0 0,rgba(88,101,242,0.25),transparent 65%),
-    radial-gradient(circle at 100% 0,rgba(181,22,85,0.32),transparent 65%),
-    linear-gradient(to bottom,rgba(12,14,32,0.99),rgba(5,6,18,0.99));
-  border-color:var(--border-dark);
-  box-shadow:0 26px 70px rgba(0,0,0,0.85);
-}
-.feed-glow{
-  position:absolute;
-  inset:auto -40% 0;
-  height:120px;
-  background:radial-gradient(circle at 50% 0,rgba(255,255,255,0.7),transparent 65%);
-  opacity:.6;
-  mix-blend-mode:soft-light;
-  pointer-events:none;
-}
-body.dark .feed-glow{
-  background:radial-gradient(circle at 50% 0,rgba(120,134,255,0.8),transparent 70%);
-  opacity:.4;
-}
-.post-list{
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  z-index:1;
-}
-.card{
-  position:relative;
-  border-radius:18px;
-  padding:18px 18px 16px;
-  background:linear-gradient(to bottom,rgba(255,255,255,0.98),rgba(245,245,255,0.96));
-  border:1px solid rgba(40,40,80,0.18);
-  display:flex;
-  gap:16px;
-  cursor:pointer;
-  transform-style:preserve-3d;
-  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease,background .25s ease;
-}
-body.dark .card{
-  background:linear-gradient(to bottom,rgba(18,20,40,0.99),rgba(10,11,26,0.99));
-  border-color:rgba(160,170,255,0.35);
-}
-.card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  background:linear-gradient(135deg,rgba(88,101,242,0.18),rgba(181,22,85,0.16));
-  opacity:0;
-  transition:opacity .3s ease;
-  pointer-events:none;
-}
-.card:hover::before{opacity:1}
-.card:hover{
-  box-shadow:0 20px 45px rgba(10,10,40,0.45);
-  border-color:rgba(88,101,242,0.75);
-}
-.card.pinned{
-  border-width:2px;
-  border-color:rgba(255,255,255,0.9);
-  box-shadow:0 0 22px rgba(255,255,255,0.7),0 22px 50px rgba(0,0,0,0.6);
-}
-.card-main{flex:1;min-width:0}
-.card-title-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
-.card-title{font-size:18px;font-weight:600;letter-spacing:-0.03em}
-.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:3px}
-.card-tag{
-  font-size:11px;
-  padding:3px 8px;
-  border-radius:999px;
-  background:linear-gradient(135deg,var(--accent),var(--velvet));
-  color:#fff;
-  text-transform:lowercase;
-  letter-spacing:.03em;
-  border:1px solid rgba(255,255,255,0.5);
-  box-shadow:0 6px 12px rgba(88,101,242,0.6);
-  transition:transform .15s ease,box-shadow .15s ease,filter .15s ease;
-}
-.card-tag:hover{
-  transform:translateY(-1px) scale(1.06);
-  box-shadow:0 10px 18px rgba(181,22,85,0.65);
-  filter:brightness(1.06);
-}
-.card-body{
-  font-size:14px;
-  line-height:1.55;
-  color:var(--muted-light);
-  white-space:pre-wrap;
-  word-wrap:break-word;
-}
-body.dark .card-body{color:var(--muted-dark)}
-.card-meta{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:8px;
-  font-size:11px;
-  color:var(--muted-light);
-}
-body.dark .card-meta{color:var(--muted-dark)}
-.card-date{font-style:italic}
-.card-badge{
-  padding:3px 7px;
-  border-radius:999px;
-  border:1px solid rgba(40,40,80,0.16);
-  background:linear-gradient(to bottom,rgba(255,255,255,0.9),rgba(235,235,255,0.96));
-}
-body.dark .card-badge{
-  border-color:rgba(190,200,255,0.35);
-  background:linear-gradient(to bottom,rgba(25,28,56,0.98),rgba(9,11,26,0.98));
-}
-.card-media{
-  flex-shrink:0;
-  width:132px;
-  height:132px;
-  border-radius:14px;
-  overflow:hidden;
-  background:radial-gradient(circle at 30% 0,rgba(255,255,255,0.9),rgba(230,230,255,0.25),rgba(200,200,255,0.12));
-  border:1px solid rgba(40,40,80,0.18);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease,background .25s ease;
-}
-body.dark .card-media{
-  background:radial-gradient(circle at 12% 0,rgba(255,255,255,0.16),rgba(21,24,60,0.9));
-  border-color:rgba(170,180,255,0.5);
-}
-.card:hover .card-media{
-  transform:translateZ(18px) translateY(-3px);
-  box-shadow:0 16px 28px rgba(10,10,40,0.85);
-  border-color:rgba(255,255,255,0.9);
-}
-.card-media img{width:100%;height:100%;object-fit:cover}
-.inline-icon{
-  height:1.05em;
-  vertical-align:-0.15em;
-  border-radius:6px;
-}
-.empty-state{
-  padding:40px 10px 16px;
-  font-size:14px;
-  text-align:center;
-  color:var(--muted-light);
-}
-body.dark .empty-state{color:var(--muted-dark)}
-.modal{
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(0,0,0,0.55);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  z-index:80;
-}
-.modal.show{display:flex}
-.modal-panel{
-  width:min(760px,100% - 40px);
-  max-height:80vh;
-  border-radius:22px;
-  padding:26px 24px 20px;
-  background:linear-gradient(to bottom,rgba(255,255,255,0.99),rgba(243,243,255,0.99));
-  border:1px solid var(--border-light);
-  box-shadow:0 26px 70px rgba(0,0,0,0.62);
-  display:flex;
-  flex-direction:column;
-  animation:modalIn .32s cubic-bezier(.18,1,.3,1);
-}
-body.dark .modal-panel{
-  background:linear-gradient(to bottom,rgba(13,15,32,0.99),rgba(6,8,20,0.99));
-  border-color:var(--border-dark);
-}
-@keyframes modalIn{
-  0%{opacity:0;transform:translateY(14px) scale(.96)}
-  100%{opacity:1;transform:translateY(0) scale(1)}
-}
-.modal-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:10px;
-  margin-bottom:12px;
-}
-.modal-title{
-  font-size:22px;
-  font-weight:600;
-  letter-spacing:-0.04em;
-}
-.modal-tags{
-  margin-top:6px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-}
-.modal-body{
-  font-size:14px;
-  line-height:1.65;
-  color:var(--muted-light);
-  white-space:pre-wrap;
-}
-body.dark .modal-body{color:var(--muted-dark)}
-.modal-footer{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:14px;
-  font-size:11px;
-  color:var(--muted-light);
-}
-body.dark .modal-footer{color:var(--muted-dark)}
-.modal-media{
-  width:100%;
-  max-height:260px;
-  border-radius:16px;
-  overflow:hidden;
-  margin-bottom:14px;
-  border:1px solid rgba(40,40,80,0.2);
-}
-.modal-media img{width:100%;height:100%;object-fit:cover}
-.modal-close{
-  width:26px;
-  height:26px;
-  border-radius:999px;
-  border:1px solid rgba(40,40,80,0.18);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:18px;
-  cursor:pointer;
-  opacity:.75;
-  transition:transform .15s ease,opacity .15s ease,background .2s ease,border-color .2s ease;
-}
-body.dark .modal-close{border-color:rgba(185,195,255,0.35)}
-.modal-close:hover{
-  opacity:1;
-  transform:translateY(-1px);
-  background:radial-gradient(circle at 30% 0,rgba(255,255,255,0.96),rgba(242,242,255,0.96));
-}
-body.dark .modal-close:hover{
-  background:radial-gradient(circle at 30% 0,rgba(38,41,92,0.96),rgba(10,12,30,0.98));
-}
-.modal-close:active{transform:translateY(0) scale(.95)}
-@media(max-width:768px){
-  body{padding-top:58px}
-  .top-bar{height:58px;padding:0 12px}
-  .top-title{font-size:14px}
-  .app-shell{padding:18px 10px 28px}
-  .feed{padding:14px 10px 16px;border-radius:20px}
-  .card{padding:14px 13px 12px;flex-direction:column}
-  .card-media{width:100%;height:190px}
-}
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+.close:hover{opacity:1;}
+
+.no-posts{
+    text-align:center;
+    padding:100px 0;
+    font-size:22px;
+    opacity:.7;
 }
 </style>
 </head>
+
 <body>
-<div class="top-bar" id="topBar">
-  <div class="top-left">
-    <div class="top-title">I bought the whole domain, I'm going to use the whole domain</div>
-  </div>
-  <div class="top-right">
-    <a class="icon-link" href="https://youtube.com/@RousevGuesses" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-    </a>
-    <div class="icon-link" id="discordBtn">
-      <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/></svg>
+
+<div class="top">
+    <div style="font-size:18px;font-weight:600;">I bought the whole domain, I'm going to use the whole domain</div>
+
+    <div class="tools" id="tools">
+        <!-- Sort -->
+        <div class="tool" id="btnSort" title="Sort">
+            <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3zm4 5h14v2H7zm6 5h8v2h-8z"/></svg>
+        </div>
+
+        <!-- Discord -->
+        <div class="tool" id="btnDiscord" title="Discord">
+            <svg viewBox="0 0 24 24"><path d="M20 4s-2-1-5-1l-.5 1.3...z"/></svg>
+        </div>
+
+        <!-- Theme -->
+        <div class="tool" id="btnTheme" title="Toggle Theme">
+            <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9A7 7 0 0 1 12 3z"/></svg>
+        </div>
     </div>
-    <div class="icon-link" id="emailBtn">
-      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-    </div>
-  </div>
-  <div class="top-right">
-    <div class="sort-shell">
-      <button class="sort-button" id="sortButton">
-        <span id="sortLabel">Newest</span>
-        <svg viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
-      </button>
-      <div class="sort-menu" id="sortMenu">
-        <div class="sort-item active" data-mode="date">By date<span>new → old</span></div>
-        <div class="sort-item" data-mode="default">Default order<span># index</span></div>
-        <div class="sort-item" data-mode="random">Random<span>shuffle</span></div>
-        <div class="sort-item" data-mode="length">By length<span id="lengthDir">short → long</span></div>
-        <div class="sort-item" data-mode="tag">By tag<span>press Enter</span></div>
-        <input id="tagInput" class="sort-tag-input" placeholder="filter tag...">
-      </div>
-    </div>
-    <div class="icon-link" id="themeToggle">
-      <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9A7 7 0 0 1 12 3z"/></svg>
-    </div>
-  </div>
 </div>
 
-<div class="app-shell">
-  <section class="feed">
-    <div class="feed-glow"></div>
-    <div class="post-list" id="postList">
-      <div class="empty-state">loading...</div>
-    </div>
-  </section>
+<div class="container">
+    <div id="posts"></div>
+    <div id="noPostsMsg" class="no-posts" style="display:none;">no posts</div>
 </div>
 
-<div class="modal" id="modal">
-  <div class="modal-panel">
-    <div class="modal-header">
-      <div>
-        <div class="modal-title" id="modalTitle"></div>
-        <div class="modal-tags" id="modalTags"></div>
-      </div>
-      <div class="modal-close" id="modalClose">×</div>
-    </div>
-    <div class="modal-media" id="modalMedia" style="display:none;"></div>
-    <div class="modal-body" id="modalBody"></div>
-    <div class="modal-footer">
-      <div id="modalDate"></div>
-      <div>fullscreen view</div>
-    </div>
-  </div>
+<div id="modal" class="fullscreen">
+    <div class="fullscreen-inner" id="modalContent"></div>
+    <div class="close" onclick="closeModal()">×</div>
 </div>
 
 <script>
-(function(){
-  const prefersDark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const stored=localStorage.getItem("rousev-theme");
-  const initialDark=stored?stored==="dark":prefersDark;
-  if(initialDark) document.body.classList.add("dark");
-  function toggleTheme(){
-    document.body.classList.toggle("dark");
-    localStorage.setItem("rousev-theme",document.body.classList.contains("dark")?"dark":"light");
-  }
-  document.getElementById("themeToggle").addEventListener("click",toggleTheme);
+let posts = [];
+let sortMode = "date";
 
-  document.getElementById("discordBtn").addEventListener("click",function(){
-    alert("@brousev on discord");
-  });
-  document.getElementById("emailBtn").addEventListener("click",function(){
-    alert("contact@rousev.com");
-  });
+btnTheme.onclick = () => document.body.classList.toggle("dark");
+btnDiscord.onclick = () => openModal("Contact", "@brousev on discord");
+btnSort.onclick = () => cycleSort();
 
-  const topBar=document.getElementById("topBar");
-  let lastScroll=window.pageYOffset||0;
-  window.addEventListener("scroll",function(){
-    const y=window.pageYOffset||0;
-    if(y<=4) topBar.classList.remove("hidden");
-    else if(y>lastScroll+5) topBar.classList.add("hidden");
-    else if(y<lastScroll-5) topBar.classList.remove("hidden");
-    lastScroll=y;
-  },{passive:true});
+function cycleSort(){
+    const modes=["date","length","random"];
+    sortMode = modes[(modes.indexOf(sortMode)+1)%modes.length];
+    renderAll();
+}
 
-  function escapeHtml(str){
-    return str.replace(/[&<>"']/g,function(c){
-      return({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c];
-    });
-  }
-  function linkify(text){
-    return text.replace(/(https?:\/\/[^\s]+)/g,function(url){
-      try{
-        const u=new URL(url);
-        let label=u.hostname.replace(/^www\./,"");
-        if(u.pathname&&u.pathname!=="/") label+=u.pathname;
-        return'<a href="'+escapeHtml(url)+'" target="_blank" rel="noopener">'+escapeHtml(label)+'</a>';
-      }catch(e){
-        return escapeHtml(url);
-      }
-    });
-  }
-  function processInlineImages(text){
-    return text
-      .replace(/\[\$\/\/image:(.*?)\/\/\]/gi,function(_,p){return'<img class="inline-icon" src="'+escapeHtml(p.trim())+'" alt="">';})
-      .replace(/\[\$\/\/url:(.*?)\/\/\]/gi,function(_,p){return'<img class="inline-icon" src="'+escapeHtml(p.trim())+'" alt="">';});
-  }
-  function parseDateBlock(lines){
-    let idx=lines.length-1;
-    while(idx>0 && !lines[idx].trim()) idx--;
-    const last=lines[idx].trim();
-    const m=last.match(/\/\[(\d{2})\.(\d{2})\.(\d{4})\]\//);
-    if(!m) return{date:null,lines};
-    const d=new Date(parseInt(m[3],10),parseInt(m[2],10)-1,parseInt(m[1],10));
-    const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
-    const day=d.getDate();
-    let suf="th";
-    if(day%10===1&&day%100!==11) suf="st";
-    else if(day%10===2&&day%100!==12) suf="nd";
-    else if(day%10===3&&day%100!==13) suf="rd";
-    const display=day+suf+" of "+months[d.getMonth()]+" "+d.getFullYear();
-    return{date:{display,time:d.getTime()},lines:lines.slice(0,idx)};
-  }
-  function parseTitle(raw){
-    let title=raw;
-    let image=null;
-    const im=raw.match(/\[\$\/\/(image|url):(.*?)\/\/\]/i);
-    if(im){
-      image=im[2].trim();
-      title=title.replace(im[0],"").trim();
-    }
-    const tagMatches=title.match(/\/#([^/]+)\//g)||[];
-    const tags=tagMatches.map(t=>t.slice(2,-1).trim());
-    title=title.replace(/\/#([^/]+)\//g,"").trim();
-    return{title,image,tags};
-  }
-  function parseEntry(text,index,pinned){
-    const norm=text.replace(/\r\n/g,"\n").trim();
-    if(!norm) return null;
-    const lines=norm.split("\n");
-    const first=lines[0]||"";
-    const t=parseTitle(first);
-    const rest=lines.slice(1);
-    const d=parseDateBlock(rest);
-    const bodyRaw=d.lines.join("\n").trim();
-    const bodyHtml=processInlineImages(linkify(escapeHtml(bodyRaw)));
-    return{
-      index,
-      pinned:!!pinned,
-      title:t.title||"(untitled)",
-      image:t.image,
-      tags:t.tags,
-      bodyRaw,
-      bodyHtml,
-      date:d.date
-    };
-  }
-
-  const allEntries=[];
-  const listEl=document.getElementById("postList");
-  let sortMode="date";
-  let lengthAsc=true;
-
-  async function fetchText(path){
+async function fetchText(u){
     try{
-      const res=await fetch(path,{cache:"no-store"});
-      if(res.ok) return await res.text();
-    }catch(e){}
-    return null;
-  }
-
-  async function loadEntries(){
-    let pinnedText=await fetchText("./Posts/IMPORTANT.txt");
-    if(pinnedText){
-      const pe=parseEntry(pinnedText,-1,true);
-      if(pe) allEntries.push(pe);
+        const r = await fetch(u,{cache:"no-store"});
+        if(!r.ok) return null;
+        return await r.text();
+    }catch{
+        return null;
     }
-    let anyThing=false;
-    let anyFirstThree=false;
+}
+
+async function loadPosts(){
+    // Pinned
+    const pin = await fetchText("./posts/IMPORTANT.txt");
+    if(pin) posts.push({content:pin,pinned:true});
+
+    // Thing_N loader
     let i=1;
     while(true){
-      const txt=await fetchText("./Posts/Thing_"+i+".txt");
-      if(!txt) break;
-      anyThing=true;
-      if(i<=3) anyFirstThree=true;
-      const e=parseEntry(txt,i,false);
-      if(e) allEntries.push(e);
-      i++;
+        const txt = await fetchText("./posts/Thing_" + i + ".txt");
+        if(!txt) break;
+        posts.push({content:txt,pinned:false});
+        i++;
     }
-    if(!anyThing && !pinnedText){
-      listEl.innerHTML='<div class="empty-state">no posts</div>';
-      return;
-    }
-    sortAndRender();
-  }
 
-  function sortAndRender(){
-    let entries=allEntries.slice();
-    if(!entries.length){
-      listEl.innerHTML='<div class="empty-state">no posts</div>';
-      return;
-    }
-    const pinned=entries.filter(e=>e.pinned);
-    const rest=entries.filter(e=>!e.pinned);
-    if(sortMode==="default"){
-      rest.sort((a,b)=>a.index-b.index);
-    }else if(sortMode==="date"){
-      rest.sort((a,b)=>{
-        if(a.date && b.date) return b.date.time-a.date.time;
-        if(a.date && !b.date) return -1;
-        if(!a.date && b.date) return 1;
-        return a.index-b.index;
-      });
-    }else if(sortMode==="random"){
-      rest.sort(()=>Math.random()-0.5);
-    }else if(sortMode==="length-asc" || sortMode==="length-desc"){
-      rest.sort((a,b)=>{
-        const la=a.bodyRaw.length;
-        const lb=b.bodyRaw.length;
-        return sortMode==="length-asc"?la-lb:lb-la;
-      });
-    }else if(sortMode==="tag"){
-      const tag=document.getElementById("tagInput").value.trim().toLowerCase();
-      if(tag){
-        rest=rest.filter(e=>e.tags.some(t=>t.toLowerCase().includes(tag)));
-      }
-    }
-    entries=pinned.concat(rest);
-    render(entries);
-  }
+    renderAll();
+}
 
-  function render(entries){
-    listEl.innerHTML="";
-    entries.forEach(e=>{
-      const card=document.createElement("article");
-      card.className="card"+(e.pinned?" pinned":"");
-      card.dataset.index=e.index;
-      const main=document.createElement("div");
-      main.className="card-main";
-      const titleRow=document.createElement("div");
-      titleRow.className="card-title-row";
-      const titleEl=document.createElement("div");
-      titleEl.className="card-title";
-      titleEl.textContent=e.title;
-      titleRow.appendChild(titleEl);
-      main.appendChild(titleRow);
-      if(e.tags.length){
-        const tagsEl=document.createElement("div");
-        tagsEl.className="card-tags";
-        e.tags.forEach(tag=>{
-          const t=document.createElement("button");
-          t.type="button";
-          t.className="card-tag";
-          t.textContent=tag;
-          t.addEventListener("click",function(ev){
-            ev.stopPropagation();
-            document.getElementById("tagInput").value=tag;
-            sortMode="tag";
-            updateSortUI();
-            sortAndRender();
-          });
-          tagsEl.appendChild(t);
-        });
-        main.appendChild(tagsEl);
-      }
-      if(e.bodyHtml){
-        const body=document.createElement("div");
-        body.className="card-body";
-        body.innerHTML=e.bodyHtml;
-        main.appendChild(body);
-      }
-      const meta=document.createElement("div");
-      meta.className="card-meta";
-      const date=document.createElement("div");
-      date.className="card-date";
-      date.textContent=e.date?e.date.display:"";
-      const badge=document.createElement("div");
-      badge.className="card-badge";
-      badge.textContent=e.pinned?"pinned":"tap to open";
-      meta.appendChild(date);
-      meta.appendChild(badge);
-      main.appendChild(meta);
-      card.appendChild(main);
-      if(e.image){
-        const media=document.createElement("div");
-        media.className="card-media";
-        const img=document.createElement("img");
-        img.src=e.image;
-        img.alt="";
-        media.appendChild(img);
-        card.appendChild(media);
-      }
-      card.addEventListener("click",function(){openModal(e);});
-      if(window.matchMedia && window.matchMedia("(pointer:fine)").matches){
-        card.addEventListener("mousemove",function(ev){
-          const r=card.getBoundingClientRect();
-          const x=(ev.clientX-r.left)/r.width-0.5;
-          const y=(ev.clientY-r.top)/r.height-0.5;
-          const rx=y*-10;
-          const ry=x*10;
-          card.style.transform="perspective(900px) translateY(-4px) rotateX("+rx+"deg) rotateY("+ry+"deg)";
-        });
-        card.addEventListener("mouseleave",function(){
-          card.style.transform="perspective(900px) translateY(0) rotateX(0) rotateY(0)";
-        });
-      }
-      listEl.appendChild(card);
+function extractDate(s){
+    const m = s.match(/\[(\d{2})\.(\d{2})\.(\d{4})\]/);
+    return m ? new Date(+m[3],+m[2]-1,+m[1]) : new Date(0);
+}
+
+function cleanTitle(l){
+    return l.replace(/\[\$\/.*?\/\]/g,"").replace(/#[^\/]+\/?/g,"").trim();
+}
+
+function extractTags(l){
+    return (l.match(/#[^\/]+\/?/g) || []).map(t=>t.replace(/[\/#]/g,""));
+}
+
+function renderAll(){
+    const wrap=document.getElementById("posts");
+    const empty=document.getElementById("noPostsMsg");
+    wrap.innerHTML="";
+
+    if(posts.length===0){
+        empty.style.display="block";
+        return;
+    }
+    empty.style.display="none";
+
+    if(sortMode==="date") posts.sort((a,b)=>extractDate(b.content)-extractDate(a.content));
+    if(sortMode==="length") posts.sort((a,b)=>b.content.length-a.content.length);
+    if(sortMode==="random") posts.sort(()=>Math.random()-.5);
+
+    posts.forEach(p=>{
+        const lines=p.content.split("\n");
+        const title=cleanTitle(lines[0]);
+        const tags=extractTags(lines[0]);
+        const img=(lines[0].match(/\[\$\/url:(.*?)\/\]/)||[])[1];
+        const body=lines.slice(1).join("\n");
+        const date=extractDate(p.content).toLocaleDateString();
+
+        const el=document.createElement("div");
+        el.className="post";
+        if(p.pinned) el.classList.add("pinned");
+        el.innerHTML=`
+        ${img?`<img src="${img}">`:""}
+        <div class="post-title">${title}</div>
+        <div class="tags">${tags.map(t=>`<div class="tag">${t}</div>`).join("")}</div>
+        <div class="date">${date}</div>
+        `;
+        el.onclick=()=>openModal(title,body,date);
+        wrap.append(el);
     });
-  }
+}
 
-  const modal=document.getElementById("modal");
-  const modalTitle=document.getElementById("modalTitle");
-  const modalTags=document.getElementById("modalTags");
-  const modalBody=document.getElementById("modalBody");
-  const modalDate=document.getElementById("modalDate");
-  const modalMedia=document.getElementById("modalMedia");
-  document.getElementById("modalClose").addEventListener("click",function(){modal.classList.remove("show");});
-  modal.addEventListener("click",function(e){if(e.target===modal) modal.classList.remove("show");});
-  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&modal.classList.contains("show")) modal.classList.remove("show");});
+function openModal(t,b="",d=""){
+    modalContent.innerHTML=`
+        <h2>${t}</h2>
+        ${b?`<div style='white-space:pre-wrap;margin-top:16px;font-size:17px;'>${b}</div>`:""}
+        ${d?`<div style='margin-top:18px;opacity:.65;'>${d}</div>`:""}
+    `;
+    document.getElementById("modal").style.display="flex";
+}
+function closeModal(){
+    document.getElementById("modal").style.display="none";
+}
 
-  function openModal(e){
-    modalTitle.textContent=e.title;
-    modalTags.innerHTML="";
-    e.tags.forEach(tag=>{
-      const t=document.createElement("span");
-      t.className="card-tag";
-      t.textContent=tag;
-      modalTags.appendChild(t);
-    });
-    modalBody.innerHTML=e.bodyHtml;
-    modalDate.textContent=e.date?e.date.display:"";
-    if(e.image){
-      modalMedia.style.display="block";
-      modalMedia.innerHTML='<img src="'+escapeHtml(e.image)+'" alt="">';
-    }else{
-      modalMedia.style.display="none";
-      modalMedia.innerHTML="";
-    }
-    modal.classList.add("show");
-  }
-
-  const sortButton=document.getElementById("sortButton");
-  const sortMenu=document.getElementById("sortMenu");
-  const sortLabel=document.getElementById("sortLabel");
-  const tagInput=document.getElementById("tagInput");
-  const lengthDir=document.getElementById("lengthDir");
-
-  function updateSortUI(){
-    document.querySelectorAll(".sort-item").forEach(i=>i.classList.remove("active"));
-    document.querySelectorAll(".sort-item").forEach(i=>{
-      const m=i.getAttribute("data-mode");
-      if(sortMode==="length-asc"||sortMode==="length-desc"){
-        if(m==="length") i.classList.add("active");
-      }else if(m===sortMode) i.classList.add("active");
-    });
-    if(sortMode==="date") sortLabel.textContent="Newest";
-    else if(sortMode==="default") sortLabel.textContent="Default";
-    else if(sortMode==="random") sortLabel.textContent="Random";
-    else if(sortMode==="tag") sortLabel.textContent="Tag";
-    else if(sortMode==="length-asc"||sortMode==="length-desc") sortLabel.textContent=sortMode==="length-asc"?"Length ↑":"Length ↓";
-  }
-
-  sortButton.addEventListener("click",function(e){
-    e.stopPropagation();
-    sortMenu.classList.toggle("show");
-  });
-  document.addEventListener("click",function(){sortMenu.classList.remove("show");});
-  document.querySelectorAll(".sort-item").forEach(item=>{
-    item.addEventListener("click",function(e){
-      const mode=item.getAttribute("data-mode");
-      if(mode==="length"){
-        lengthAsc=!lengthAsc;
-        sortMode=lengthAsc?"length-asc":"length-desc";
-        lengthDir.textContent=lengthAsc?"short → long":"long → short";
-      }else if(mode==="tag"){
-        sortMode="tag";
-        tagInput.focus();
-      }else{
-        sortMode=mode;
-      }
-      updateSortUI();
-      sortMenu.classList.remove("show");
-      sortAndRender();
-      e.stopPropagation();
-    });
-  });
-  tagInput.addEventListener("keydown",function(e){
-    if(e.key==="Enter"){
-      sortMode="tag";
-      updateSortUI();
-      sortMenu.classList.remove("show");
-      sortAndRender();
-    }
-  });
-
-  const isMobile=/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)|| (navigator.maxTouchPoints&&navigator.maxTouchPoints>2);
-  if(isMobile && !(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)){
-    let ticking=false;
-    function updateParallax(){
-      const cards=document.querySelectorAll(".card");
-      const vh=window.innerHeight;
-      cards.forEach(card=>{
-        const r=card.getBoundingClientRect();
-        const center=r.top+r.height/2;
-        const dist=(center-vh/2)/(vh/2);
-        const offset=Math.max(Math.min(dist,1),-1);
-        const translate=-8*offset;
-        const scale=1-Math.abs(offset)*0.04;
-        card.style.transform="translateY("+translate+"px) scale("+scale.toFixed(3)+")";
-      });
-      ticking=false;
-    }
-    window.addEventListener("scroll",function(){
-      if(!ticking){
-        window.requestAnimationFrame(updateParallax);
-        ticking=true;
-      }
-    },{passive:true});
-  }
-
-  loadEntries();
-})();
+loadPosts();
 </script>
+
 </body>
 </html>
